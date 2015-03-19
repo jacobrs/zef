@@ -30,7 +30,10 @@ app.use('/api/accounts/create', function(req, res, next){
 
     Account.findOne( { username: username }, function(err, result){
       //Account doesn't exist, create and save new one.
-      if ( result.length === 0 ){
+      if ( err ){
+        console.log(err);
+      }
+      else if ( !result ){
         var account = new Account({ username: username, password: req.query.password });
 
         // Save this account to mongo
@@ -39,7 +42,7 @@ app.use('/api/accounts/create', function(req, res, next){
             console.log(err);
         });
 
-        res.send(req.query); // Send username and pass back(just for now) 
+        res.send(account); // Send username and pass back(just for now) 
       }else{
         res.send("Account already exists!");
       }
@@ -64,7 +67,7 @@ app.use('/api/accounts/login', function(req, res, next){
 
     // Find the account that the user wants
     Account.findOne( { username: username, password: password }, function(err, result){
-      if ( err || result.length === 0 ){
+      if ( err || !result ) { 
         res.send("Invalid creds");
       }else{
         res.send(result);  
