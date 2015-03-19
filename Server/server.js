@@ -21,15 +21,27 @@ app.use(function(req, res, next) {
 
 app.use('/api/accounts/create', function(req, res, next){
   // Sample create
-  var account = new Account({ username: 'Shane', password: 'pass' });
+  var username = req.query.username;
+  var password = req.query.password;
 
-  // Save this account to mongo
-  account.save(function (err) {
-    if (err)
-      console.log(err);
-  });
+  if( username && password ){
+    // Sample get
+    // http://localhost:8080/api/accounts/create?username=Shane&password=%22okay%22
 
-  res.send(account);
+    var account = new Account({ username: username, password: req.query.password });
+
+    // Save this account to mongo
+    account.save(function (err) {
+      if (err)
+        console.log(err);
+    });
+
+    res.send(req.query);
+  }
+  else{
+    res.send("ERROR: Invalid GET request");
+  }
+
 });
 
 app.use('/api', function(req, res, next){
