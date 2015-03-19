@@ -15,8 +15,6 @@ app.use('/api', function(req, res, next){
 	res.send("NICE JOB");
 });
 
-// app.use(express.static('app'));
-
-console.log('Starting a server on port 80');
+console.log('Starting a server on port 8080');
 
 var server = http.createServer(app).listen(8080);
