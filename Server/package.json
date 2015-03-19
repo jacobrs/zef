@@ -19,6 +19,7 @@
   "homepage": "https://github.com/jacobrs/zef",
   "dependencies": {
     "express": "^4.12.3",
-    "mongoose": "^3.8.25"
+    "mongoose": "^3.8.25",
+    "mongoose-auto-increment": "latest"
   }
 }
