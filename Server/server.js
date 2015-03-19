@@ -28,15 +28,48 @@ app.use('/api/accounts/create', function(req, res, next){
     // Sample get
     // http://localhost:8080/api/accounts/create?username=Shane&password=%22okay%22
 
+    Account.findOne( { username: username }, function(err, result){
+      //Account doesn't exist, create and save new one.
+      if ( result.length === 0 ){
+        var account = new Account({ username: username, password: req.query.password });
+
+        // Save this account to mongo
+        account.save(function (err) {
+          if (err)
+            console.log(err);
+        });
+
+        res.send(req.query); // Send username and pass back(just for now) 
+      }else{
+        res.send("Account already exists!");
+      }
+    });
+  }
+  else{
+    res.send("ERROR: Invalid GET request");
+  }
+
+});
+
+app.use('/api/accounts/login', function(req, res, next){
+  // Sample create
+  var username = req.query.username;
+  var password = req.query.password;
+
+  if( username && password ){
+    // Sample get
+    // http://localhost:8080/api/accounts/create?username=Shane&password=%22okay%22
+
     var account = new Account({ username: username, password: req.query.password });
 
-    // Save this account to mongo
-    account.save(function (err) {
-      if (err)
-        console.log(err);
+    // Find the account that the user wants
+    Account.findOne( { username: username, password: password }, function(err, result){
+      if ( err || result.length === 0 ){
+        res.send("Invalid creds");
+      }else{
+        res.send(result);  
+      }
     });
-
-    res.send(req.query);
   }
   else{
     res.send("ERROR: Invalid GET request");
