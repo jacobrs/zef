@@ -20,14 +20,17 @@ app.use(function(req, res, next) {
 });
 
 app.use('/api/accounts/create', function(req, res, next){
+  res.contentType('application/json');
   // Sample create
   var username = req.query.username;
   var password = req.query.password;
 
   if( username && password ){
     // Sample get
-    // http://localhost:8080/api/accounts/create?username=Shane&password=%22okay%22
+    // http://localhost:8080/api/accounts/create?username=Shane&password=okay
 
+    var builder = [];
+    builder["status"] = "failed";
     Account.findOne( { username: username }, function(err, result){
       //Account doesn't exist, create and save new one.
       if ( err ){
@@ -42,9 +45,11 @@ app.use('/api/accounts/create', function(req, res, next){
             console.log(err);
         });
 
-        res.send(account); // Send username and pass back(just for now) 
+        builder["status"] = "success";
+        res.json(builder); // Send confirmation of creation 
       }else{
-        res.send("Account already exists!");
+        builder["status"] = "exists";
+        res.json(builder);
       }
     });
   }
@@ -81,7 +86,7 @@ app.use('/api/accounts/login', function(req, res, next){
 });
 
 app.use('/api', function(req, res, next){
-    res.send("NICE JOB");
+    res.send("Welcome to Zef, soon to be on the High tek Interwebs");
 });
 
 app.use('*', function(req, res, next){
