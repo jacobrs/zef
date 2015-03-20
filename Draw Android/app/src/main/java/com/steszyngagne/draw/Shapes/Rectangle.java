@@ -42,14 +42,14 @@ public class Rectangle extends Shape {
             if(fillColor != Color.TRANSPARENT) {
                 paint.setColor(fillColor);
                 paint.setStyle(Style.FILL);
-                canvas.drawOval(new RectF(x1,y1,x2,y2), paint);
+                canvas.drawRect(x1,y1,x2,y2, paint);
             }
             if(strokeColor != Color.TRANSPARENT && strokeWidth > 0) {
                 paint.setStyle(Style.STROKE);
                 paint.setColor(strokeColor);
                 paint.setStrokeWidth(strokeWidth);
                 paint.setStrokeCap(Paint.Cap.ROUND);
-                canvas.drawOval(new RectF(x1,y1,x2,y2), paint);
+                canvas.drawRect(x1,y1,x2,y2, paint);
             }
         }
 
