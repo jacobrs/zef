@@ -29,7 +29,7 @@ app.use('/api/accounts/create', function(req, res, next){
     // Sample get
     // http://localhost:8080/api/accounts/create?username=Shane&password=okay
 
-    var builder = [];
+    var builder = {};
     builder["status"] = "failed";
     Account.findOne( { username: username }, function(err, result){
       //Account doesn't exist, create and save new one.
@@ -45,10 +45,10 @@ app.use('/api/accounts/create', function(req, res, next){
             console.log(err);
         });
 
-        builder["status"] = "success";
+        builder.status = "success";
         res.json(builder); // Send confirmation of creation 
       }else{
-        builder["status"] = "exists";
+        builder.status = "exists";
         res.json(builder);
       }
     });
