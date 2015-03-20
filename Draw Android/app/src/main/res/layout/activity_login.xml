@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:paddingRight="30dp"
             android:paddingLeft="30dp"
-            android:paddingTop="70dp"
+            android:paddingTop="50dp"
             android:orientation="vertical"
             android:layout_height="wrap_content">
 
@@ -51,7 +51,7 @@
                 android:id="@+id/username"
                 android:textColor="@color/teal"
                 android:textColorHint="@color/light_teal"
-                android:hint="@string/username"
+                android:hint="@string/username_email"
                 android:inputType="textEmailAddress"
                 android:textColorHighlight="@color/light_teal"
                 android:layout_width="match_parent"
@@ -68,6 +68,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <EditText
+                android:visibility="gone"
+                android:paddingTop="20dp"
+                android:id="@+id/reg_email"
+                android:textColor="@color/teal"
+                android:textColorHint="@color/light_teal"
+                android:hint="@string/username"
+                android:inputType="textEmailAddress"
+                android:textColorHighlight="@color/light_teal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
             <Button
                 android:id="@+id/submit"
                 android:gravity="center"
@@ -81,11 +94,22 @@
                 android:layout_height="wrap_content" />
 
             <TextView
+                android:id="@+id/need"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:textColor="@drawable/teal_text_clickable"
+                android:text="@string/need_signup" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:gravity="center"
-                android:paddingTop="15dp"
                 android:textColor="@color/light_teal"
                 android:text="@string/assignmentlevel" />
 

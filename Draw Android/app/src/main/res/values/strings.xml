@@ -22,9 +22,11 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title">Zef Draw</string>
-    <string name="creds">by: Shane Steszyn and Jacob Gagne</string>
+    <string name="creds">Shane Steszyn and Jacob Gagne</string>
 
-    <string name="username">Username / Email</string>
+    <string name="username_email">Username / Email</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
     <string name="password">Password</string>
 
     <string name="signin">Sign in</string>
@@ -34,4 +36,9 @@
     <string name="actions">Erase/Undo</string>
     <string name="tools">Change Tool</string>
     <string name="signout">Sign Out</string>
+
+    <string name="need_signup">Need an account? <b>Sign Up</b></string>
+    <string name="signup">Sign Up</string>
+    <string name="back_signin">Go back to Sign In</string>
+
 </resources>
