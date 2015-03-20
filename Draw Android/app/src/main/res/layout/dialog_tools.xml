@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minWidth="300dp"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <RadioGroup
+            android:id="@+id/radioGroup1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <RadioButton
+                android:id="@+id/radioRectangle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/tool_rect" />
+
+            <RadioButton
+                android:id="@+id/radioSquare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tool_square" />
+
+            <RadioButton
+                android:id="@+id/radioLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tool_line" />
+
+            <RadioButton
+                android:id="@+id/radioCircle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tool_circle" />
+
+            <RadioButton
+                android:id="@+id/radioOval"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tool_oval" />
+        </RadioGroup>
+
+        <ImageView
+            android:id="@+id/widthImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/desc" />
+    </LinearLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="1" >
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="right"
+                android:text="@string/tool_width" />
+
+            <SeekBar
+                android:id="@+id/widthSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:max="50"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="right"
+                android:text="@string/tool_fg" />
+
+            <ImageButton
+                android:id="@+id/btnFG"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/desc"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="right"
+                android:text="@string/tool_bg" />
+
+            <ImageButton
+                android:id="@+id/btnBG"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:contentDescription="@string/desc"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp" />
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        android:id="@+id/widthDone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/tool_done" />
+
+</LinearLayout>
