@@ -1,5 +1,6 @@
 package com.steszyngagne.draw;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.Dialog;
@@ -40,7 +41,11 @@ public class MainActivity extends Activity {
             case R.id.menu_menu:
                 showMenuDialog();
                 return true;
+            case R.id.signout:
+                signOut();
+                return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -85,5 +90,10 @@ public class MainActivity extends Activity {
         current.show();
     }
 
+    private void signOut(){
+        Intent home = new Intent(MainActivity.this, Login.class);
+        startActivity(home);
+        this.finish();
+    }
 
 }

@@ -31,4 +31,7 @@
     <string name="assignmentlevel">V.4.0.1</string>
 
     <string name="missing">Fill in both fields</string>
+    <string name="actions">Erase/Undo</string>
+    <string name="tools">Change Tool</string>
+    <string name="signout">Sign Out</string>
 </resources>
