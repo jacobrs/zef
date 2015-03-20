@@ -27,7 +27,7 @@ app.use('/api/accounts/create', function(req, res, next){
   var email = req.query.email;
 
   var builder = {};
-  builder["error"] = {};
+  builder.error = [];
   if( username && password && email){
     // Sample get
     // http://localhost:8080/api/accounts/create?username=Shane&password=okay&email=jacob.gagne@yahoo.ca
@@ -53,22 +53,21 @@ app.use('/api/accounts/create', function(req, res, next){
                 console.log(err);
             });
 
-            builder.error = {};
             res.json(builder); // Send confirmation of creation 
           }else{
-            builder.error["email"] = "exists";
+            builder.error.push( {"email":"exists"} );
             res.json(builder);
           }
         });
 
       }else{
-        builder.error["username"] = "exists";
+        builder.error.push( {"username":"exists"} );
         res.json(builder);
       }
     });
   }
   else{
-    builder.error["parameters"] = "missing";
+    builder.error.push( {"parameters":"missing"} );
     res.send(builder);
   }
 
