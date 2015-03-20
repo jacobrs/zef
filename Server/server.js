@@ -84,6 +84,10 @@ app.use('/api', function(req, res, next){
     res.send("NICE JOB");
 });
 
+app.use('*', function(req, res, next){
+    res.send("404");
+});
+
 console.log('Starting a server on port 8080');
 
 var server = http.createServer(app).listen(8080);
