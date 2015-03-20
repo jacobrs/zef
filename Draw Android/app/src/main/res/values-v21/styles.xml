@@ -9,6 +9,7 @@
         <item name="colorAccent">@color/light_teal</item>
         <item name="android:windowBackground">@android:color/white</item>
 
+        <item name="android:colorControlHighlight">@color/light_teal</item>
         <!-- Set Action Bar preferences -->
         <item name="android:windowActionBar">true</item>
         <item name="android:windowNoTitle">false</item>
