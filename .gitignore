@@ -26,3 +26,8 @@ proguard/
 *.log
 
 node_modules/
+
+# Studio files
+**/.idea/*.iws
+**/.idea/workspace.xml
+**/.idea/tasks.xml
