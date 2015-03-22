@@ -13,12 +13,14 @@ mongo.connect('mongodb://localhost/oop');
 var Account = mongo.model('accounts', { username: String, password: String, email: String }); // Account id is _id
 var Picture = mongo.model('pictures', { account_id: Number, encoded_string: Object, is_shared: Boolean }); //Picture id is _id
 
-// Log all reqs to console (terminal)
+// Log all reqs to console (terminal) LETS MAKE MIDDLEWARE. Maybe log stats later for webapp?
 app.use(function(req, res, next) {
   console.log(req.method, req.url);
   next();
 });
 
+// IN:  username, password
+// OUT: token, ERRORS
 app.use('/api/accounts/create', function(req, res, next){
   res.contentType('application/json');
   // Sample create
@@ -73,6 +75,8 @@ app.use('/api/accounts/create', function(req, res, next){
 
 });
 
+// IN:  username, password
+// OUT: token, ERRORS
 app.use('/api/accounts/login', function(req, res, next){
   // Sample create
   var username = req.query.username;
@@ -97,6 +101,36 @@ app.use('/api/accounts/login', function(req, res, next){
     res.send("ERROR: Invalid GET request");
   }
 
+});
+
+// IN:  token_id
+// OUT: invalid token, list of pic names+ids
+app.use('/pictures/list', function(req, res, next){
+});
+
+// IN:  token_id, pic_id
+// OUT: invalid token/pic_id, picJSON
+app.use('/pictures/get', function(req, res, next){
+});
+
+// IN:  token_id, picJSON
+// OUT: invalid token, picJSON
+app.use('/pictures/create', function(req, res, next){
+});
+
+// IN:  token_id, pic_id
+// OUT: invalid token, invalid id, confirmation
+app.use('/pictures/delete', function(req, res, next){
+  var builder = {};
+  pictures.remove( { _id: picId }, function(err){
+    if (!err){
+      res.send("niceee"); // How are we sending good responses?
+    }
+    else{
+      builder.error = err;
+      res.send(builder.error);
+    }
+  });
 });
 
 app.use('/api', function(req, res, next){
