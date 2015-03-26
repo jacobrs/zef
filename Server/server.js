@@ -106,6 +106,19 @@ app.use('/api/accounts/login', function(req, res, next){
 // IN:  token_id
 // OUT: invalid token, list of pic names+ids
 app.use('/pictures/list', function(req, res, next){
+  var builder = {};
+
+  // TODO Validate TOKEN
+
+  Pictures.find({}, 'name _id', function(err, result){
+    if ( err || !result ) { 
+      builder.error = err;
+      res.json(builder.error);
+    }else{
+      res.json(result);
+    }
+  });
+  
 });
 
 // IN:  token_id, pic_id
