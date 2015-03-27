@@ -11,6 +11,8 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Picture {
 
@@ -48,13 +50,16 @@ public class Picture {
         return shapes;
     }
 
-    public JSONArray shapesToJson(){
+    public JSONObject shapesToJson() throws JSONException {
+        JSONObject container = new JSONObject();
         JSONArray array = new JSONArray();
 
         for (int i = 0; i < shapes.size(); i++){
             array.put(shapes.get(i).shapeToJson());
         }
 
-        return array;
+        container.put("shapes", array);
+
+        return container;
     }
 }
