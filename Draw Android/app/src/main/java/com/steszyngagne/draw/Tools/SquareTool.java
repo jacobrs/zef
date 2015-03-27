@@ -28,15 +28,19 @@ public class SquareTool extends RectangleBasedTool {
     public void touchEnd(MotionEvent event) {
         float nx2 = event.getX();
         float ny2 = event.getY();
+        float length = 0;
         checkForBackwards(nx2, ny2);
         // width is less than height
         if(x2 - x1 < y2 - y1){
-            y2 = y1 + (x2 - x1);
+            length = x2 - x1;
+            y2 = y1 + length;
         }
         // height is less than or equal to width
         else{
-            x2 = x1 + (y2 - y1);
+            length = y2 - y1;
+            x2 = x1 + length;
         }
+
         validateDraw();
     }
 
@@ -44,14 +48,17 @@ public class SquareTool extends RectangleBasedTool {
     public void touchMove(MotionEvent event) {
         float nx2 = event.getX();
         float ny2 = event.getY();
+        float length = 0;
         checkForBackwards(nx2, ny2);
         // width is less than height
         if(x2 - x1 < y2 - y1){
-            y2 = y1 + (x2 - x1);
+            length = x2 - x1;
+            y2 = y1 + length;
         }
         // height is less than or equal to width
         else{
-            x2 = x1 + (y2 - y1);
+            length = y2 - y1;
+            x2 = x1 + length;
         }
         validateDraw();
     }
