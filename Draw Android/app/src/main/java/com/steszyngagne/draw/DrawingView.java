@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -31,6 +32,7 @@ public class DrawingView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         picture.draw(paint, canvas);
+        // Log.d("Shapes", picture.shapesToJson().toString()); // Lazy logging
     }
 
     @Override

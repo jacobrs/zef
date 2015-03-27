@@ -10,6 +10,8 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 
+import org.json.JSONArray;
+
 public class Picture {
 
     private List<Shape> shapes;
@@ -44,5 +46,15 @@ public class Picture {
 
     public List<Shape> getShapes(){
         return shapes;
+    }
+
+    public JSONArray shapesToJson(){
+        JSONArray array = new JSONArray();
+
+        for (int i = 0; i < shapes.size(); i++){
+            array.put(shapes.get(i).shapeToJson());
+        }
+
+        return array;
     }
 }

@@ -4,6 +4,8 @@ package com.steszyngagne.draw.Shapes;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import org.json.JSONObject;
+
 public abstract class Shape {
 
     protected int strokeColor;
@@ -43,4 +45,5 @@ public abstract class Shape {
 
     public abstract void draw(Paint paint, Canvas canvas, Boolean preview);
 
+    public abstract JSONObject shapeToJson();
 }

@@ -8,6 +8,9 @@ import android.graphics.Path;
 
 import com.steszyngagne.draw.ToolBox;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Line extends Shape {
 
     private float x1, x2, y1, y2;
@@ -47,6 +50,24 @@ public class Line extends Shape {
             canvas.drawPath(path, paint);
         }
 
+    }
+
+    @Override
+    public JSONObject shapeToJson(){
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("shape", "Line");
+            obj.put("x1", this.x1);
+            obj.put("x2", this.x2);
+            obj.put("y1", this.y1);
+            obj.put("y2", this.y2);
+            obj.put("fillColor", this.getFillColor());
+            obj.put("strokeColor", this.getStrokeColor());
+            obj.put("strokeColor", this.getStrokeWidth());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return obj;
     }
 
 }
