@@ -11,7 +11,7 @@ var app = express();
 mongo.connect('mongodb://localhost/oop');
 
 var Account = mongo.model('accounts', { username: String, password: String, email: String }); // Account id is _id
-var Picture = mongo.model('pictures', { account_id: Number, encoded_string: Object, is_shared: Boolean }); //Picture id is _id
+var Picture = mongo.model('pictures', { account_id: String, name: String, encoded_string: Object, is_shared: Boolean }); //Picture id is _id
 
 // Log all reqs to console (terminal) LETS MAKE MIDDLEWARE. Maybe log stats later for webapp?
 app.use(function(req, res, next) {
@@ -105,12 +105,12 @@ app.use('/api/accounts/login', function(req, res, next){
 
 // IN:  token_id
 // OUT: invalid token, list of pic names+ids
-app.use('/pictures/list', function(req, res, next){
+app.use('/api/pictures/list', function(req, res, next){
   var builder = {};
 
-  // TODO Validate TOKEN
+  // TODO Validate TOKEN, get user id for query
 
-  Pictures.find({}, 'name _id', function(err, result){
+  Picture.find({}, 'name _id', function(err, result){
     if ( err || !result ) { 
       builder.error = err;
       res.json(builder.error);
@@ -123,17 +123,17 @@ app.use('/pictures/list', function(req, res, next){
 
 // IN:  token_id, pic_id
 // OUT: invalid token/pic_id, picJSON
-app.use('/pictures/get', function(req, res, next){
+app.use('/api/pictures/get', function(req, res, next){
 });
 
 // IN:  token_id, picJSON
 // OUT: invalid token, picJSON
-app.use('/pictures/create', function(req, res, next){
+app.use('/api/pictures/create', function(req, res, next){
 });
 
 // IN:  token_id, pic_id
 // OUT: invalid token, invalid id, confirmation
-app.use('/pictures/delete', function(req, res, next){
+app.use('/api/pictures/delete', function(req, res, next){
   var builder = {};
   pictures.remove( { _id: picId }, function(err){
     if (!err){

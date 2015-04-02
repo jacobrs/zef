@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.Dialog;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import org.json.JSONException;
 
 import ca.qc.johnabbott.cs603.R;
 
@@ -66,6 +69,11 @@ public class MainActivity extends Activity {
 
             @Override
             public void onClick(View view) {
+                try {
+                    Log.d("Shapes", drawing.getPicture().shapesToJson().toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 drawing.erase();
                 drawing.invalidate();
                 current.dismiss();

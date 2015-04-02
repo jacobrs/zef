@@ -31,11 +31,19 @@ public class CircleTool extends RectangleBasedTool {
         checkForBackwards(nx2, ny2);
         // width is less than height
         if(x2 - x1 < y2 - y1){
-            y2 = y1 + (x2 - x1);
+            if(RectangleBasedTool.BOTTOM) {
+                y2 = y1 + (x2 - x1);
+            }else{
+                y1 = y2 - (x2 - x1);
+            }
         }
         // height is less than or equal to width
         else{
-            x2 = x1 + (y2 - y1);
+            if(RectangleBasedTool.LEFT){
+                x1 = x2 - (y2 - y1);
+            }else{
+                x2 = x1 + (y2 - y1);
+            }
         }
         validateDraw();
     }
@@ -47,11 +55,19 @@ public class CircleTool extends RectangleBasedTool {
         checkForBackwards(nx2, ny2);
         // width is less than height
         if(x2 - x1 < y2 - y1){
-            y2 = y1 + (x2 - x1);
+            if(RectangleBasedTool.BOTTOM) {
+                y2 = y1 + (x2 - x1);
+            }else{
+                y1 = y2 - (x2 - x1);
+            }
         }
         // height is less than or equal to width
         else{
-            x2 = x1 + (y2 - y1);
+            if(RectangleBasedTool.LEFT){
+                x1 = x2 - (y2 - y1);
+            }else{
+                x2 = x1 + (y2 - y1);
+            }
         }
         validateDraw();
     }
