@@ -32,3 +32,6 @@ node_modules/
 **/.idea/workspace.xml
 **/.idea/tasks.xml
 **/.idea/misc.xml
+
+# Bower
+bower_components/
