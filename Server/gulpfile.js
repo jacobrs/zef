@@ -12,7 +12,7 @@ gulp.task('bower', function() {
     .pipe(gulp.dest('vendor'));
 })
 
-gulp.task('flatten-js', ['bower_components'], function() {
+gulp.task('flatten-js', ['bower'], function() {
   return gulp.src('vendor/**/*.min.js')
     .pipe(flatten())
     .pipe(gulp.dest(public + '/js' + '/vendor'));
@@ -31,4 +31,5 @@ gulp.task('flatten-images', ['bower'], function() {
 });
 
 
-gulp.task('default', ['bower']);
+gulp.task('default', ['bower', 'flatten-js', 'flatten-css', 'flatten-images']);
+// gulp.task('flatten', ['flatten-js', 'flatten-css', 'flatten-images']);
