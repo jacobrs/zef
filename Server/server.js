@@ -9,6 +9,7 @@ var hbs = require('express-hbs');
 var http = require('http');
 
 var api = require('./app/routes/api');
+var website = require('./app/routes/website');
 
 
 process.argv.forEach(function(v){
@@ -48,6 +49,7 @@ app.all('*', function(req, res, next) {
 app.use(express.static('app/public'));
 
 app.use('/api', api);
+app.use('/', website);
 
 console.log('Starting a server on '+CONFIG.port);
 
