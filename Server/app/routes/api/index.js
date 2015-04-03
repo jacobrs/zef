@@ -2,14 +2,16 @@
 'use strict';
 
 var express = require('express');
-var router = express.Router();
 var mongo = require('mongoose');
+
+var router = express.Router();
 
 // Connect to mongo db
 mongo.connect('mongodb://localhost/oop');
 
-var Account = mongo.model('accounts', { username: String, password: String, email: String }); // Account id is _id
-var Picture = mongo.model('pictures', { account_id: String, name: String, encoded_string: Object, is_shared: Boolean }); //Picture id is _id
+var Account = require('../../models/Account');
+var Picture = require('../../models/Picture');
+// var Picture = mongo.model('pictures', { account_id: String, name: String, encoded_string: Object, is_shared: Boolean }); //Picture id is _id
 
 // IN:  username, password
 // OUT: token, ERRORS
@@ -47,7 +49,7 @@ router.all('/accounts/create', function(req, res, next){
                 console.log(err);
             });
 
-            res.json(builder); // Send confirmation of creation 
+            res.json(account); // Send confirmation of creation 
           }else{
             builder.email = "exists";
             res.json(builder);
@@ -116,26 +118,81 @@ router.all('/pictures/list', function(req, res, next){
 // IN:  token_id, pic_id
 // OUT: invalid token/pic_id, picJSON
 router.all('/pictures/get', function(req, res, next){
+  var pic_id = req.query.pic_id;
+  var builder = {};
+
+  // TODO Validate TOKEN
+
+  if( pic_id ){
+    Picture.find({ _id: pic_id}, '', function(err, result){
+      if ( err || !result ) { 
+        builder.error = err;
+        res.json(builder.error);
+      }else{
+        res.json(result);
+      }
+    });
+  }
+  else
+  {
+    res.send("ERROR: Invalid GET request");
+  }
+
 });
 
 // IN:  token_id, picJSON
 // OUT: invalid token, picJSON
 router.all('/pictures/create', function(req, res, next){
+  var  builder = {};
+  var picJSON = req.query.picJSON;
+  var id = 10230213123;  // USER ID, SHOULD MATCH TOKEN
+  var shared = false;
+
+  // TODO: validate token, get id of user
+
+  if (req.query.is_shared){
+    shared = true;
+  }
+
+  if( picJSON ){
+    var picture = new Picture({ account_id: id, name: picJSON.name, encoded_string: picJSON, is_shared: shared });
+    picture.save(function (err) {
+      if (err)
+        console.log(err);
+    });
+
+    res.json(picture); // Send confirmation of creation
+  }
+  else {
+    res.send("invalid request");
+  }
+  
 });
 
 // IN:  token_id, pic_id
 // OUT: invalid token, invalid id, confirmation
 router.all('/pictures/delete', function(req, res, next){
+  var pic_id = req.query.pic_id;
   var builder = {};
-  pictures.remove( { _id: picId }, function(err){
-    if (!err){
-      res.send("niceee"); // How are we sending good responses?
-    }
-    else{
-      builder.error = err;
-      res.send(builder.error);
-    }
-  });
+
+  // TODO Validate TOKEN
+  
+  if( pic_id ){
+    Picture.remove( { _id: picId }, function(err){
+      if (!err){
+        res.send("niceee"); // How are we sending good responses?
+      }
+      else{
+        builder.error = err;
+        res.send(builder.error);
+      }
+    });
+  }
+  else
+  {
+    res.send("ERROR: Invalid GET request");
+  }
+
 });
 
 router.all('/', function(req, res, next){
