@@ -3,7 +3,6 @@
 
 var express = require('express');
 var mongo = require('mongoose');
-var jwt = require('jsonwebtoken');
 
 var router = express.Router();
 
