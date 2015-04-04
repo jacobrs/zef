@@ -20,7 +20,7 @@ router.use( bodyParser.json() ); // to support JSON-encoded bodies
 
 
 router.route('/accounts')
-  .post(authController.isAuthenticated, function(req, res, next) {  //CREATE ACCOUNT
+  .put(authController.isAuthenticated, function(req, res, next) {  //CREATE ACCOUNT
     // IN:  username, password
     // OUT: token, ERRORS
 
@@ -77,7 +77,7 @@ router.route('/accounts')
     }
 
   })
-  .get(authController.isAuthenticated, function(req, res, next) {  //LOGIN ACCOUNT
+  .post(authController.isAuthenticated, function(req, res, next) {  //LOGIN ACCOUNT
     // IN:  username, password
     // OUT: token, ERRORS
 
@@ -130,7 +130,7 @@ router.route('/pictures')
     
     }
   })
-  .post(authController.isAuthenticated, function(req, res, next){  // CREATE NEW PIC
+  .put(authController.isAuthenticated, function(req, res, next){  // CREATE NEW PIC
     var  builder = {};
     var picJSON = req.body.picJSON;
     var id = req.body.id;  // USER ID, SHOULD MATCH TOKEN
