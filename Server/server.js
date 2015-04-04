@@ -9,7 +9,6 @@ var passport = require('passport');
 
 var app = express();
 
-var api = require('./app/routes/api/auth.js');
 var api = require('./app/routes/api');
 var website = require('./app/routes/website');
 
