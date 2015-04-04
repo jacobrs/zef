@@ -2,7 +2,6 @@
 'use strict';
 
 var express = require('express');
-var hbs = require('express-hbs');
 var http = require('http');
 var bodyParser = require('body-parser');
 var passport = require('passport');
@@ -35,13 +34,6 @@ app.use(passport.initialize());
 app.set('jsonp callback name', 'callback');
 app.set('json replacer', "  ");
 
-app.engine('hbs', hbs.express3({
-  partialsDir: 'app/views',
-  defaultLayout: 'app/views/default.hbs'
-}));
-app.set('view engine', 'hbs');
-app.set('views', 'app/views');
-
 app.all('*', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -49,6 +41,7 @@ app.all('*', function(req, res, next) {
 });
 
 app.use(express.static('app/public'));
+app.use('/vendor', express.static('bower_components'));
 
 app.use('/api', api);
 app.use('/', website);
