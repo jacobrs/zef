@@ -5,28 +5,29 @@ var express = require('express');
 var mongo = require('mongoose');
 
 var router = express.Router();
+var bodyParser = require('body-parser');
 
 // Connect to mongo db
 mongo.connect('mongodb://localhost/oop');
 
 var Account = require('../../models/Account');
 var Picture = require('../../models/Picture');
-// var Picture = mongo.model('pictures', { account_id: String, name: String, encoded_string: Object, is_shared: Boolean }); //Picture id is _id
+
+router.use(bodyParser.urlencoded({ extended: true }));
+router.use( bodyParser.json() ); // to support JSON-encoded bodies
 
 // IN:  username, password
 // OUT: token, ERRORS
-router.all('/accounts/create', function(req, res, next){
+router.post('/accounts/create', function(req, res, next){
   res.contentType('application/json');
   // Sample create
-  var username = req.query.username;
-  var password = req.query.password;
-  var email = req.query.email;
+  var username = req.body.username;
+  var password = req.body.password;
+  var email = req.body.email;
 
   var builder = {};
   builder.error = {};
   if( username && password && email){
-    // Sample get
-    // http://localhost:8080/api/accounts/create?username=Shane&password=okay&email=jacob.gagne@yahoo.ca
 
     Account.findOne( { username: username }, function(err, result){
       //Account doesn't exist, create and save new one.
@@ -41,7 +42,7 @@ router.all('/accounts/create', function(req, res, next){
             console.log(err);
           }
           else if ( !result ){
-            var account = new Account({ username: username, password: req.query.password });
+            var account = new Account({ username: username, password: req.body.password });
 
             // Save this account to mongo
             account.save(function (err) {
@@ -71,16 +72,14 @@ router.all('/accounts/create', function(req, res, next){
 
 // IN:  username, password
 // OUT: token, ERRORS
-router.all('/accounts/login', function(req, res, next){
+router.post('/accounts/login', function(req, res, next){
   // Sample create
-  var username = req.query.username;
-  var password = req.query.password;
+  var username = req.body.username;
+  var password = req.body.password;
 
   if( username && password ){
-    // Sample get
-    // http://localhost:8080/api/accounts/create?username=Shane&password=%22okay%22
 
-    var account = new Account({ username: username, password: req.query.password });
+    var account = new Account({ username: username, password: req.body.password });
 
     // Find the account that the user wants
     Account.findOne( { username: username, password: password }, function(err, result){
@@ -142,15 +141,15 @@ router.all('/pictures/get', function(req, res, next){
 
 // IN:  token_id, picJSON
 // OUT: invalid token, picJSON
-router.all('/pictures/create', function(req, res, next){
+router.post('/pictures/create', function(req, res, next){
   var  builder = {};
-  var picJSON = req.query.picJSON;
+  var picJSON = req.body.picJSON;
   var id = 10230213123;  // USER ID, SHOULD MATCH TOKEN
   var shared = false;
 
   // TODO: validate token, get id of user
 
-  if (req.query.is_shared){
+  if (req.body.is_shared){
     shared = true;
   }
 
