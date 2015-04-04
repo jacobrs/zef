@@ -57,7 +57,7 @@ app.controller('AppCtrl', ['$scope', '$mdSidenav', '$http', function($scope, $md
     $mdSidenav(menuId).toggle();
   };
 
-  $http.get('/api/pictures/list').success(function(result) {      
+  $http.get('/api/pictures').success(function(result) {      
     $scope.pictures = result;
   }).error(function(err) {
   });
