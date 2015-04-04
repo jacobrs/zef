@@ -10,6 +10,7 @@ hbs.registerHelper('raw-helper', function(options) {
 });
 
 router.all('/', function(req, res){
+    console.log(req.isAuthenticated.toString());
     res.render('index', {
     });
 });

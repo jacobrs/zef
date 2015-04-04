@@ -20,7 +20,7 @@ router.route('/')
 
     console.log(req.user._id); // THIS IS USER ID, DO COOL THINGS
 
-    Picture.find({}, 'name _id', function(err, result){
+    Picture.find({account_id: req.user._id}, 'name _id', function(err, result){
       if ( err || !result ) { 
         builder.error = err;
         res.json(builder.error);
@@ -104,5 +104,21 @@ router.route('/:pic_id')
     }
   });
 
+
+// PUBLIC API FOR SITE!
+router.route('/public')
+  .get(function(req, res, next){  // GET LIST OF PICS
+    var builder = {};
+
+    Picture.find({}, 'name _id', function(err, result){
+      if ( err || !result ) { 
+        builder.error = err;
+        res.json(builder.error);
+      }else{
+        console.log(result);
+        res.json(result);
+      }
+    });
+  });
 
 module.exports = router;
