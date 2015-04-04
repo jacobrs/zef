@@ -13,6 +13,8 @@ mongo.connect('mongodb://localhost/oop');
 var Account = require('../../models/Account');
 var Picture = require('../../models/Picture');
 
+var authController = require('./../../controllers/auth');
+
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use( bodyParser.json() ); // to support JSON-encoded bodies
 
@@ -106,15 +108,26 @@ router.all('/pictures/list', function(req, res, next){
 
   // TODO Validate TOKEN, get user id for query
 
-  Picture.find({}, 'name _id', function(err, result){
-    if ( err || !result ) { 
-      builder.error = err;
-      res.json(builder.error);
-    }else{
-      console.log(result);
-      res.json(result);
-    }
-  });
+  console.log(authController.isAuthenticated());
+
+  if(authController.isAuthenticated){
+
+    Picture.find({}, 'name _id', function(err, result){
+      if ( err || !result ) { 
+        builder.error = err;
+        res.json(builder.error);
+      }else{
+        console.log(result);
+        res.json(result);
+      }
+    });
+
+  }else{
+    
+    builder.error = "Unauthorized";
+    res.json(builder);
+  
+  }
   
 });
 
@@ -125,20 +138,21 @@ router.all('/pictures/get', function(req, res, next){
   var builder = {};
 
   // TODO Validate TOKEN
-
-  if( pic_id ){
-    Picture.find({ _id: pic_id}, '', function(err, result){
-      if ( err || !result ) { 
-        builder.error = err;
-        res.json(builder.error);
-      }else{
-        res.json(result);
-      }
-    });
-  }
-  else
-  {
-    res.send("ERROR: Invalid GET request");
+  if(authController.isAuthenticated){
+    if( pic_id ){
+      Picture.find({ _id: pic_id}, '', function(err, result){
+        if ( err || !result ) { 
+          builder.error = err;
+          res.json(builder.error);
+        }else{
+          res.json(result);
+        }
+      });
+    }
+    else
+    {
+      res.send("ERROR: Invalid GET request");
+    }
   }
 
 });
@@ -152,26 +166,27 @@ router.post('/pictures/create', function(req, res, next){
   var shared = false;
 
   // TODO: validate token, get id of user
+  if(authController.isAuthenticated){
+    if (req.body.is_shared){
+      shared = true;
+    }
 
-  if (req.body.is_shared){
-    shared = true;
-  }
+    if( picJSON ){
+      var picture = new Picture({ account_id: id, name: picJSON.name, encoded_string: picJSON, is_shared: shared });
+      console.log(picture);
+      picture.save(function (err) {
+        if (err){
+          console.log(err);
+        }
+        else{    
+          res.json(picture); // Send confirmation of creation
+        }
+      });
 
-  if( picJSON ){
-    var picture = new Picture({ account_id: id, name: picJSON.name, encoded_string: picJSON, is_shared: shared });
-    console.log(picture);
-    picture.save(function (err) {
-      if (err){
-        console.log(err);
-      }
-      else{    
-        res.json(picture); // Send confirmation of creation
-      }
-    });
-
-  }
-  else {
-    res.send("invalid request");
+    }
+    else {
+      res.send("invalid request");
+    }
   }
   
 });
@@ -183,21 +198,22 @@ router.all('/pictures/delete', function(req, res, next){
   var builder = {};
 
   // TODO Validate TOKEN
-  
-  if( pic_id ){
-    Picture.remove( { _id: picId }, function(err){
-      if (!err){
-        res.send("niceee"); // How are we sending good responses?
-      }
-      else{
-        builder.error = err;
-        res.send(builder.error);
-      }
-    });
-  }
-  else
-  {
-    res.send("ERROR: Invalid GET request");
+  if(authController.isAuthenticated){ 
+    if( pic_id ){
+      Picture.remove( { _id: picId }, function(err){
+        if (!err){
+          res.send("niceee"); // How are we sending good responses?
+        }
+        else{
+          builder.error = err;
+          res.send(builder.error);
+        }
+      });
+    }
+    else
+    {
+      res.send("ERROR: Invalid GET request");
+    }
   }
 
 });

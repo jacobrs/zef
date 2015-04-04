@@ -5,12 +5,12 @@ var express = require('express');
 var hbs = require('express-hbs');
 var http = require('http');
 var bodyParser = require('body-parser');
+var passport = require('passport');
 
 var app = express();
 
 var api = require('./app/routes/api');
 var website = require('./app/routes/website');
-
 
 process.argv.forEach(function(v){
   if(v === '--development') {
@@ -29,6 +29,8 @@ app.use(function(req, res, next) {
   next();
 });
 
+// Use passport
+app.use(passport.initialize());
 
 app.set('jsonp callback name', 'callback');
 app.set('json replacer', "  ");
