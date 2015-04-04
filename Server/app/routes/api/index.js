@@ -107,28 +107,17 @@ router.route('/pictures')
   .get(authController.isAuthenticated, function(req, res, next){  // GET LIST OF PICS
     var builder = {};
 
-    // TODO Validate TOKEN, get user id for query
+    console.log(req.user._id); // THIS IS USER ID, DO COOL THINGS
 
-    console.log(authController.isAuthenticated());
-
-    if(authController.isAuthenticated){
-
-      Picture.find({}, 'name _id', function(err, result){
-        if ( err || !result ) { 
-          builder.error = err;
-          res.json(builder.error);
-        }else{
-          console.log(result);
-          res.json(result);
-        }
-      });
-
-    }else{
-      
-      builder.error = "Unauthorized";
-      res.json(builder);
-    
-    }
+    Picture.find({}, 'name _id', function(err, result){
+      if ( err || !result ) { 
+        builder.error = err;
+        res.json(builder.error);
+      }else{
+        console.log(result);
+        res.json(result);
+      }
+    });
   })
   .put(authController.isAuthenticated, function(req, res, next){  // CREATE NEW PIC
     var  builder = {};
@@ -136,29 +125,27 @@ router.route('/pictures')
     var id = req.body.id;  // USER ID, SHOULD MATCH TOKEN
     var shared = false;
 
-    // TODO: validate token, get id of user
-    if(authController.isAuthenticated){
-      if (req.body.is_shared){
-        shared = true;
-      }
-
-      if( picJSON ){
-        var picture = new Picture({ account_id: id, name: picJSON.name, encoded_string: picJSON, is_shared: shared });
-        console.log(picture);
-        picture.save(function (err) {
-          if (err){
-            console.log(err);
-          }
-          else{    
-            res.json(picture); // Send confirmation of creation
-          }
-        });
-
-      }
-      else {
-        res.send("invalid request");
-      }
+    if (req.body.is_shared){
+      shared = true;
     }
+
+    if( picJSON ){
+      var picture = new Picture({ account_id: id, name: picJSON.name, encoded_string: picJSON, is_shared: shared });
+      console.log(picture);
+      picture.save(function (err) {
+        if (err){
+          console.log(err);
+        }
+        else{    
+          res.json(picture); // Send confirmation of creation
+        }
+      });
+
+    }
+    else {
+      res.send("invalid request");
+    }
+  
   });
 
 router.route('/pictures/:pic_id')
@@ -168,22 +155,19 @@ router.route('/pictures/:pic_id')
     var pic_id = req.params.pic_id;
     var builder = {};
 
-    // TODO Validate TOKEN
-    if(authController.isAuthenticated){
-      if( pic_id ){
-        Picture.find({ _id: pic_id}, '', function(err, result){
-          if ( err || !result ) { 
-            builder.error = err;
-            res.json(builder.error);
-          }else{
-            res.json(result);
-          }
-        });
-      }
-      else
-      {
-        res.send("ERROR: Invalid GET request");
-      }
+    if( pic_id ){
+      Picture.find({ _id: pic_id}, '', function(err, result){
+        if ( err || !result ) { 
+          builder.error = err;
+          res.json(builder.error);
+        }else{
+          res.json(result);
+        }
+      });
+    }
+    else
+    {
+      res.send("ERROR: Invalid GET request");
     }
   })
   .delete(authController.isAuthenticated, function(req, res, next){  //DELETE PICTURE
@@ -192,23 +176,20 @@ router.route('/pictures/:pic_id')
     var pic_id = req.params.pic_id;
     var builder = {};
 
-    // TODO Validate TOKEN
-    if(authController.isAuthenticated){ 
-      if( pic_id ){
-        Picture.remove( { _id: picId }, function(err){
-          if (!err){
-            res.send("niceee"); // How are we sending good responses?
-          }
-          else{
-            builder.error = err;
-            res.send(builder.error);
-          }
-        });
-      }
-      else
-      {
-        res.send("ERROR: Invalid GET request");
-      }
+    if( pic_id ){
+      Picture.remove( { _id: picId }, function(err){
+        if (!err){
+          res.send("niceee"); // How are we sending good responses?
+        }
+        else{
+          builder.error = err;
+          res.send(builder.error);
+        }
+      });
+    }
+    else
+    {
+      res.send("ERROR: Invalid GET request");
     }
   });
 
