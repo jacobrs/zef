@@ -2,11 +2,11 @@
 'use strict';
 
 var express = require('express');
-var app = express();
-
 var hbs = require('express-hbs');
-
 var http = require('http');
+var bodyParser = require('body-parser');
+
+var app = express();
 
 var api = require('./app/routes/api');
 var website = require('./app/routes/website');

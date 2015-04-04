@@ -35,6 +35,11 @@ node_modules/
 
 # Bower
 bower_components/
+<<<<<<< HEAD
+vendor/
+**/vendor/
+=======
 
 # Vendor
 vendor/
+>>>>>>> 565ab640c32529ebab662198b976e9185ee8116f
