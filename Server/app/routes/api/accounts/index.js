@@ -15,7 +15,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use( bodyParser.json() ); // to support JSON-encoded bodies
 
 router.route('/accounts')
-  .put(authController.isAuthenticated, function(req, res, next) {  //CREATE ACCOUNT
+  .put(function(req, res, next) {  //CREATE ACCOUNT
     // IN:  username, password
     // OUT: token, ERRORS
 
