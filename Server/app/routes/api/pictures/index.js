@@ -8,6 +8,7 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 
 var Picture = require('../../../models/Picture');
+var Account = require('../../../models/Account');
 
 var authController = require('../auth');
 
@@ -24,12 +25,31 @@ router.route('/public')
         builder.error = err;
         res.json(builder.error);
       }else{
-
-        console.log(result);
         res.json(result);
       }
     });
   });
+router.route('/public/:pic_id')
+  .get(function(req, res, next){  // GET LIST OF PICS
+    var builder = {};
+
+    Picture.findOne({is_shared: true, _id: req.params.pic_id}, 'name _id', function(err, result){
+      if ( err || !result ) { 
+        builder.error = err;
+        res.json(builder.error);
+      }else{
+        builder.picture = result;
+        builder.account = "";
+        Account.findOne({_id:result.account_id}, 'username email', function(e,r){
+          builder.account = r;
+          res.json(builder);  
+        });
+      }
+    });
+
+  });
+
+// PRIVATE
 
 router.route('/')
   .get(authController.isAuthenticated, function(req, res, next){  // GET LIST OF PICS
@@ -40,9 +60,9 @@ router.route('/')
     Picture.find({account_id: req.user._id}, '', function(err, result){
       if ( err || !result ) { 
         builder.error = err;
+
         res.json(builder.error);
       }else{
-        console.log(result);
         res.json(result);
       }
     });
@@ -73,7 +93,6 @@ router.route('/')
     else {
       res.send("invalid request");
     }
-  
   });
 
 router.route('/:pic_id')
@@ -83,13 +102,20 @@ router.route('/:pic_id')
     var pic_id = req.params.pic_id;
     var builder = {};
 
+     var pic="551f395df3c0026805737f23";
+    console.log(pic_id);
     if( pic_id ){
-      Picture.find({ _id: pic_id}, '', function(err, result){
+      Picture.findOne({_id:pic_id}, function(err, result){
         if ( err || !result ) { 
           builder.error = err;
           res.json(builder.error);
         }else{
-          res.json(result);
+          builder.picture = result;
+          builder.account = "";
+          Account.findOne({_id:result.account_id}, 'username email', function(e,r){
+            builder.account = r;
+            res.json(builder);  
+          });
         }
       });
     }
@@ -105,7 +131,7 @@ router.route('/:pic_id')
     var builder = {};
 
     if( pic_id ){
-      Picture.remove( { _id: picId }, function(err){
+      Picture.remove( { _id: pic_id }, function(err){
         if (!err){
           res.send("niceee"); // How are we sending good responses?
         }
