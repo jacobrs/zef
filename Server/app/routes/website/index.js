@@ -5,9 +5,12 @@ var mongoose = require('mongoose');
 
 var router = express.Router();
 
+hbs.registerHelper('raw-helper', function(options) {
+    return options.fn();
+});
+
 router.all('/', function(req, res){
     res.render('index', {
-        layout: false
     });
 });
 
