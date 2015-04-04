@@ -1,0 +1,20 @@
+<md-dialog aria-label="Picture">
+  <md-content class="sticky-container">
+
+    <h3>{{picture.name}}</h3>
+    <span ng-if="creator !== ''" >
+      <md-subheader class="md-sticky-no-effect">Created by: {{creator}}</md-subheader>
+    </span>
+    <div class="dialog-content">
+      <p>
+        Gaahhh. I need to put a canvas here....
+      </p>
+    </div>
+  </md-content>
+  <div class="md-actions" layout="row">
+    <span flex></span>
+    <md-button ng-click="answer('kkk')" class="md-primary">
+      Okay
+    </md-button>
+  </div>
+</md-dialog>
