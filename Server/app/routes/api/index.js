@@ -10,10 +10,6 @@ var bodyParser = require('body-parser');
 // Connect to mongo db
 mongo.connect('mongodb://localhost/oop');
 
-var Account = require('../../models/Account');
-var Picture = require('../../models/Picture');
-
-var authController = require('./auth');
 var picturesAPI = require('./pictures');
 var accountsAPI = require('./accounts');
 

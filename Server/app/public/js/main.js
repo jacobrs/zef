@@ -55,8 +55,7 @@ app.config(function ($mdThemingProvider) {
 app.config(['$routeProvider', function($router) {
   $router
   .when('/', {
-    controller: 'AppCtrl',
-    templateUrl: 'home.html'
+    templateUrl: 'pictures.html'
   })
   .otherwise({
     redirectTo: '/'
