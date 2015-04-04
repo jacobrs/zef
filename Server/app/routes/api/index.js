@@ -48,9 +48,12 @@ router.post('/accounts/create', function(req, res, next){
             account.save(function (err) {
               if (err)
                 console.log(err);
+              else
+              {
+                res.json(account); // Send confirmation of creation 
+              }
             });
 
-            res.json(account); // Send confirmation of creation 
           }else{
             builder.email = "exists";
             res.json(builder);
@@ -108,6 +111,7 @@ router.all('/pictures/list', function(req, res, next){
       builder.error = err;
       res.json(builder.error);
     }else{
+      console.log(result);
       res.json(result);
     }
   });
@@ -144,7 +148,7 @@ router.all('/pictures/get', function(req, res, next){
 router.post('/pictures/create', function(req, res, next){
   var  builder = {};
   var picJSON = req.body.picJSON;
-  var id = 10230213123;  // USER ID, SHOULD MATCH TOKEN
+  var id = req.body.id;  // USER ID, SHOULD MATCH TOKEN
   var shared = false;
 
   // TODO: validate token, get id of user
@@ -155,12 +159,16 @@ router.post('/pictures/create', function(req, res, next){
 
   if( picJSON ){
     var picture = new Picture({ account_id: id, name: picJSON.name, encoded_string: picJSON, is_shared: shared });
+    console.log(picture);
     picture.save(function (err) {
-      if (err)
+      if (err){
         console.log(err);
+      }
+      else{    
+        res.json(picture); // Send confirmation of creation
+      }
     });
 
-    res.json(picture); // Send confirmation of creation
   }
   else {
     res.send("invalid request");
