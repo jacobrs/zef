@@ -8,7 +8,7 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 
 // Connect to mongo db
-mongo.connect('mongodb://localhost/oop');
+mongo.connect('mongodb://ec2-user@ec2-52-4-224-221.compute-1.amazonaws.com/oop');
 
 var picturesAPI = require('./pictures');
 var accountsAPI = require('./accounts');
