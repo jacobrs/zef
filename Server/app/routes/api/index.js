@@ -13,10 +13,8 @@ mongo.connect('mongodb://localhost/oop');
 var picturesAPI = require('./pictures');
 var accountsAPI = require('./accounts');
 
-
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use( bodyParser.json() ); // to support JSON-encoded bodies
-
 
 router.use('/accounts', accountsAPI);
 router.use('/pictures', picturesAPI);
