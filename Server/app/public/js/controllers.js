@@ -51,6 +51,11 @@ function ViewPicCtrl($http, $scope, $mdDialog, pic_id) {
     console.log(result);
     $scope.picture = result.picture;
     $scope.creator = result.account.username;
+
+    var canvas = document.getElementById('canvas');
+    var ctx=c.getContext("2d");
+    ctx.rect(20,20,150,100);
+    ctx.stroke();
   }).error(function(err) {
 
   });

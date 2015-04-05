@@ -1,0 +1,68 @@
+[
+  {
+    "shapes": [
+      {
+        "shape": "Rectangle",
+        "x1": 171,
+        "x2": 474,
+        "y1": 404,
+        "y2": 687,
+        "fillColor": 0,
+        "strokeColor": 2
+      },
+      {
+        "shape": "Rectangle",
+        "x1": 411,
+        "x2": 753,
+        "y1": 954,
+        "y2": 1234,
+        "fillColor": 0,
+        "strokeColor": 2
+      }
+    ]
+  },
+  {
+    "shapes": [
+      {
+        "shape": "Line",
+        "x1": 204,
+        "x2": 745,
+        "y1": 505,
+        "y2": 595,
+        "fillColor": 0,
+        "strokeColor": 2
+      },
+      {
+        "shape": "Line",
+        "x1": 305,
+        "x2": 900,
+        "y1": 1015,
+        "y2": 1081,
+        "fillColor": 0,
+        "strokeColor": 2
+      }
+    ]
+  },
+  {
+    "shapes": [
+      {
+        "shape": "Oval",
+        "x1": 147,
+        "x2": 745,
+        "y1": 361,
+        "y2": 857,
+        "fillColor": 0,
+        "strokeColor": 2
+      },
+      {
+        "shape": "Oval",
+        "x1": 357,
+        "x2": 999,
+        "y1": 103,
+        "y2": 573,
+        "fillColor": 0,
+        "strokeColor": 2
+      }
+    ]
+  }
+]
