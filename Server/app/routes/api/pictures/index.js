@@ -49,6 +49,7 @@ router.route('/public/:pic_id')
   });
 
 // PRIVATE
+
 router.route('/')
   .get(function(req, res, next){  // GET LIST OF PICS
     var builder = {};
@@ -144,5 +145,8 @@ router.route('/:pic_id')
       res.send("ERROR: Invalid GET request");
     }
   });
+
+
+
 
 module.exports = router;
