@@ -9,14 +9,14 @@ passport.use(new BasicStrategy(
       if (err) { return callback(err); }
 
       // No user found with that username
-      if (!user) { return callback(null, false); }
+      if (!user) { return callback(null, false, {message: "invalid"}); }
 
       // Make sure the password is correct
       user.verifyPassword(password, function(err, isMatch) {
         if (err) { return callback(err); }
 
         // Password did not match
-        if (!isMatch) { return callback(null, false); }
+        if (!isMatch) { return callback(null, false, {message: "invalid"}); }
 
         // Success
         return callback(null, user);

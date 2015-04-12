@@ -30,6 +30,7 @@ app.use(function(req, res, next) {
 
 // Use passport
 app.use(passport.initialize());
+app.use(passport.session());
 
 app.set('jsonp callback name', 'callback');
 app.set('json replacer', "  ");
