@@ -3,6 +3,7 @@
 
 var express = require('express');
 var mongo = require('mongoose');
+var shortid = require('shortid');
 
 var router = express.Router();
 var bodyParser = require('body-parser');
@@ -20,6 +21,7 @@ router.route('/')
 
     res.contentType('application/json');
     // Sample create
+    console.log(req.body);
     var username = req.body.username;
     var password = req.body.password;
     var email = req.body.email;
@@ -41,7 +43,7 @@ router.route('/')
               console.log(err);
             }
             else if ( !result ){
-              var account = new Account({ username: username, password: req.body.password });
+              var account = new Account({ username: username, password: password, email:email,  apikey: shortid.generate() });
 
               // Save this account to mongo
               account.save(function (err) {
@@ -49,7 +51,7 @@ router.route('/')
                   console.log(err);
                 else
                 {
-                  res.json(account); // Send confirmation of creation 
+                  res.json(account.apikey); // Send confirmation of creation 
                 }
               });
 
