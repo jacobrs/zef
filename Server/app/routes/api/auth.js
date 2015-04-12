@@ -1,28 +1,46 @@
 // Load required packages
 var passport = require('passport');
 var BasicStrategy = require('passport-http').BasicStrategy;
-var User = require('../../models/Account');
+var passport = require('passport');
+var LocalStrategy = require('passport-localapikey').Strategy;
 
-passport.use(new BasicStrategy(
-  function(username, password, callback) {
-    User.findOne({ username: username }, function (err, user) {
-      if (err) { return callback(err); }
+var Account = require('../../models/Account');
 
       // No user found with that username
-      if (!user) { return callback(null, false, {message: "invalid"}); }
+      if (!user) { return callback(null, false); }
 
-      // Make sure the password is correct
-      user.verifyPassword(password, function(err, isMatch) {
-        if (err) { return callback(err); }
+function findByApiKey(apikey, fn) {
+  var users = [];
+  Account.findOne({apikey: apikey}, function(err,result){
+    return fn(null, result);
+  });
+}
 
-        // Password did not match
-        if (!isMatch) { return callback(null, false, {message: "invalid"}); }
+//For sessions, if we use them
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
 
-        // Success
-        return callback(null, user);
-      });
+passport.deserializeUser(function(id, done) {
+  findById(id, function (err, user) {
+    done(err, user);
+  });
+});
+
+passport.use(new LocalStrategy(
+  function(apikey, done) {
+    // asynchronous verification, for effect...
+    process.nextTick(function () {
+
+      findByApiKey(apikey, function(err, user) {
+        if (err) { return done(err); }
+        if (!user) {console.log("gg"); return done(null, false, { message: 'Unknown apikey : ' + apikey }); }
+
+        return done(null, user);
+      })
     });
   }
 ));
 
-exports.isAuthenticated = passport.authenticate('basic', { session : false });
+
+exports.isAuthenticated = passport.authenticate('localapikey', {failureRedirect: '/api/unauthorized'});

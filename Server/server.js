@@ -5,6 +5,7 @@ var express = require('express');
 var http = require('http');
 var bodyParser = require('body-parser');
 var passport = require('passport');
+var flash = require('connect-flash');
 
 var app = express();
 
@@ -31,6 +32,8 @@ app.use(function(req, res, next) {
 // Use passport
 app.use(passport.initialize());
 app.use(passport.session());
+
+// app.use(flash());
 
 app.set('jsonp callback name', 'callback');
 app.set('json replacer', "  ");

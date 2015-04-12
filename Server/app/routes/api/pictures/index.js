@@ -52,10 +52,10 @@ router.route('/public/:pic_id')
 // PRIVATE
 
 router.route('/')
+//localhost:8080/api/pictures?apikey=test
   .get(authController.isAuthenticated, function(req, res, next){  // GET LIST OF PICS
     var builder = {};
-
-    console.log(req.user._id); // THIS IS USER ID, DO COOL THINGS
+    console.log(req.user); // THIS IS USER ID, DO COOL THINGS
 
     Picture.find({account_id: req.user._id}, '', function(err, result){
       if ( err || !result ) { 
@@ -67,7 +67,7 @@ router.route('/')
       }
     });
   })
-  .put(authController.isAuthenticated, function(req, res, next){  // CREATE NEW PIC
+  .put(function(req, res, next){  // CREATE NEW PIC
     var  builder = {};
     var picJSON = req.body.picJSON;
     var id = req.body.id;  // USER ID, SHOULD MATCH TOKEN
@@ -95,6 +95,7 @@ router.route('/')
     }
   });
 
+//localhost:8080/api/pictures/552029fd6434b60129f3e266?apikey=test
 router.route('/:pic_id')
   .get(authController.isAuthenticated, function(req, res, next){  // GET LIST OF PICS
     // IN:  token_id, pic_id

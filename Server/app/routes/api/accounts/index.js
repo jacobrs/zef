@@ -3,13 +3,12 @@
 
 var express = require('express');
 var mongo = require('mongoose');
+var shortid = require('shortid');
 
 var router = express.Router();
 var bodyParser = require('body-parser');
 
 var Account = require('../../../models/Account');
-
-var authController = require('../auth');
 
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use( bodyParser.json() ); // to support JSON-encoded bodies
@@ -21,6 +20,7 @@ router.route('/')
 
     res.contentType('application/json');
     // Sample create
+    console.log(req.body);
     var username = req.body.username;
     var password = req.body.password;
     var email = req.body.email;
@@ -42,7 +42,7 @@ router.route('/')
               console.log(err);
             }
             else if ( !result ){
-              var account = new Account({ username: username, password: req.body.password });
+              var account = new Account({ username: username, password: password, email:email,  apikey: shortid.generate() });
 
               // Save this account to mongo
               account.save(function (err) {
@@ -50,7 +50,7 @@ router.route('/')
                   console.log(err);
                 else
                 {
-                  res.json(account); // Send confirmation of creation 
+                  res.json(account.apikey); // Send confirmation of creation 
                 }
               });
 
@@ -72,7 +72,7 @@ router.route('/')
     }
 
   })
-  .post(authController.isAuthenticated, function(req, res, next) {  //LOGIN ACCOUNT
+  .post(function(req, res, next) {  //LOGIN ACCOUNT
     // IN:  username, password
     // OUT: token, ERRORS
 
