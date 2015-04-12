@@ -9,6 +9,7 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 
 var Account = require('../../../models/Account');
+var API_LIMIT = 1000 * 10; // ten minutes
 
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use( bodyParser.json() ); // to support JSON-encoded bodies
@@ -50,7 +51,7 @@ router.route('/')
                   console.log(err);
                 else
                 {
-                  res.json(account.apikey); // Send confirmation of creation 
+                  res.json(account); // Send confirmation of creation 
                 }
               });
 
@@ -84,11 +85,11 @@ router.route('/')
       var account = new Account({ username: username, password: req.body.password });
 
       // Find the account that the user wants
-      Account.findOne( { username: username, password: password }, function(err, result){
-        if ( err || !result ) { 
+      Account.findOneAndUpdate( { username: username, password: password }, {$set: {apikey: shortid.generate(), accessed: new Date() }} , {new:true}, function(err, user){
+        if ( err || !user ) { 
           res.send("Invalid creds");
         }else{
-          res.send(result);  
+          res.json(user);
         }
       });
     }

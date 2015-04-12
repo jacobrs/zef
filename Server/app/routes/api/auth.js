@@ -5,7 +5,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-localapikey').Strategy;
 
 var Account = require('../../models/Account');
-
+var API_LIMIT = 1000 * 10; // ten minutes
 
 function findByApiKey(apikey, fn) {
   var users = [];
@@ -34,6 +34,10 @@ passport.use(new LocalStrategy(
         if (err) { return done(err); }
         if (!user) {console.log("gg"); return done(null, false, { message: 'Unknown apikey : ' + apikey }); }
 
+        //User was found, do stuff, like update last use time.
+        if ((new Date() - user.accessed) > API_LIMIT){
+          return done(null, false, { message: 'apikey timed out, log in again' });
+        }
         return done(null, user);
       })
     });

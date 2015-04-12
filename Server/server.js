@@ -31,6 +31,7 @@ app.use(function(req, res, next) {
 
 // Use passport
 app.use(passport.initialize());
+// app.use(passport.session());
 
 // app.use(flash());
 

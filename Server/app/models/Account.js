@@ -5,7 +5,8 @@ var AccountSchema = new mongoose.Schema({
   username: { type: String, unique: true, required: true },
   password: { type: String, required: true },
   email: { type: Object, required: true },
-  apikey: { type: String, required: true, unique: true, 'default': shortid.generate}
+  apikey: { type: String, required: true, unique: true, 'default': shortid.generate},
+  accessed: { type: Date, 'default': new Date() }
 });
 
 AccountSchema.methods.validPassword = function(password, cb) {
