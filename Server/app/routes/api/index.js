@@ -16,6 +16,20 @@ mongo.connect('mongodb://ec2-user@ec2-52-4-224-221.compute-1.amazonaws.com/oop')
 var picturesAPI = require('./pictures');
 var accountsAPI = require('./accounts');
 
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    User.findOne({ username: username }, function(err, user) {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username.' });
+      }
+      if (!user.validPassword(password)) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
+      return done(null, user);
+    });
+  }
+));
 passport.serializeUser(function(user, done) {
   done(null, user);
 });
@@ -42,7 +56,8 @@ router.all('*', function(req, res, next){
     // Manually establish the session...
     req.login(user, function(err) {
       if (err) return next(err);
-      next();
+      console.log("SUCCESS");
+      next(req);
     });
 
   })(req, res, next);

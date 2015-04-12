@@ -53,7 +53,7 @@ router.route('/')
   .get(function(req, res, next){  // GET LIST OF PICS
     var builder = {};
 
-    console.log(req.user._id); // THIS IS USER ID, DO COOL THINGS
+    console.log(req.user); // THIS IS USER ID, DO COOL THINGS
 
     Picture.find({account_id: req.user._id}, '', function(err, result){
       if ( err || !result ) { 
