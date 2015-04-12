@@ -9,7 +9,6 @@ var bodyParser = require('body-parser');
 
 var Account = require('../../../models/Account');
 
-var authController = require('../auth');
 
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use( bodyParser.json() ); // to support JSON-encoded bodies
@@ -72,7 +71,7 @@ router.route('/')
     }
 
   })
-  .post(authController.isAuthenticated, function(req, res, next) {  //LOGIN ACCOUNT
+  .post(function(req, res, next) {  //LOGIN ACCOUNT
     // IN:  username, password
     // OUT: token, ERRORS
 
