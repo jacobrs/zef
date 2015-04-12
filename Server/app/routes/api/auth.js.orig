@@ -6,6 +6,7 @@ var LocalStrategy = require('passport-localapikey').Strategy;
 
 var Account = require('../../models/Account');
 
+
 function findByApiKey(apikey, fn) {
   var users = [];
   Account.findOne({apikey: apikey}, function(err,result){
@@ -13,10 +14,15 @@ function findByApiKey(apikey, fn) {
   });
 }
 
+<<<<<<< HEAD
+      // No user found with that username
+      if (!user) { return callback(null, false, {message: "invalid"}); }
+=======
 //For sessions, if we use them
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
+>>>>>>> devss
 
 passport.deserializeUser(function(id, done) {
   findById(id, function (err, user) {
@@ -24,10 +30,15 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
+<<<<<<< HEAD
+        // Password did not match
+        if (!isMatch) { return callback(null, false, {message: "invalid"}); }
+=======
 passport.use(new LocalStrategy(
   function(apikey, done) {
     // asynchronous verification, for effect...
     process.nextTick(function () {
+>>>>>>> devss
 
       findByApiKey(apikey, function(err, user) {
         if (err) { return done(err); }
