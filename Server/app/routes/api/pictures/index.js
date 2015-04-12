@@ -10,6 +10,7 @@ var bodyParser = require('body-parser');
 var Picture = require('../../../models/Picture');
 var Account = require('../../../models/Account');
 
+var authController = require('../auth');
 
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use( bodyParser.json() ); // to support JSON-encoded bodies
@@ -51,9 +52,9 @@ router.route('/public/:pic_id')
 // PRIVATE
 
 router.route('/')
-  .get(function(req, res, next){  // GET LIST OF PICS
+//localhost:8080/api/pictures?apikey=test
+  .get(authController.isAuthenticated, function(req, res, next){  // GET LIST OF PICS
     var builder = {};
-
     console.log(req.user); // THIS IS USER ID, DO COOL THINGS
 
     Picture.find({account_id: req.user._id}, '', function(err, result){
@@ -94,8 +95,9 @@ router.route('/')
     }
   });
 
+//localhost:8080/api/pictures/552029fd6434b60129f3e266?apikey=test
 router.route('/:pic_id')
-  .get(function(req, res, next){  // GET LIST OF PICS
+  .get(authController.isAuthenticated, function(req, res, next){  // GET LIST OF PICS
     // IN:  token_id, pic_id
     // OUT: invalid token/pic_id, picJSON
     var pic_id = req.params.pic_id;
@@ -123,7 +125,7 @@ router.route('/:pic_id')
       res.send("ERROR: Invalid GET request");
     }
   })
-  .delete(function(req, res, next){  //DELETE PICTURE
+  .delete(authController.isAuthenticated, function(req, res, next){  //DELETE PICTURE
     // IN:  token_id, pic_id
     // OUT: invalid token, invalid id, confirmation
     var pic_id = req.params.pic_id;

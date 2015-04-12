@@ -10,7 +10,6 @@ var bodyParser = require('body-parser');
 
 var Account = require('../../../models/Account');
 
-
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use( bodyParser.json() ); // to support JSON-encoded bodies
 
