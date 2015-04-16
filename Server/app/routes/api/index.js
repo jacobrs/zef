@@ -25,7 +25,10 @@ router.use('/accounts', accountsAPI);
 router.use('/pictures', picturesAPI);
 
 router.all('/unauthorized', function(req, res, next){
-  res.json({error:'unauthorized'});
+  var builder = {};
+  builder.status = "failed";
+  builder.message = "unauthorized";
+  res.json(builder);
 });
 
 router.all('/', function(req, res, next){

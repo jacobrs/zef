@@ -27,7 +27,7 @@ router.route('/')
     var email = req.body.email;
 
     var builder = {};
-    builder.error = {};
+    builder.status = "failed";
     if( username && password && email){
 
       Account.findOne( { username: username }, function(err, result){
@@ -47,28 +47,33 @@ router.route('/')
 
               // Save this account to mongo
               account.save(function (err) {
-                if (err)
-                  console.log(err);
+                if (err){
+                  builder.message = err;
+                  console.log(builder);
+                }
                 else
                 {
-                  res.json(account); // Send confirmation of creation 
+
+                  builder.status = "success";
+                  builder.account = account;
+                  res.json(builder); // Send confirmation of creation 
                 }
               });
 
             }else{
-              builder.email = "exists";
+              builder.message = "Email taken";
               res.json(builder);
             }
           });
 
         }else{
-          builder.error.username = "exists";
+          builder.message = "Username taken";
           res.json(builder);
         }
       });
     }
     else{
-      builder.error.parameters = "missing";
+      builder.message = "Missing Fields";
       res.send(builder);
     }
 
