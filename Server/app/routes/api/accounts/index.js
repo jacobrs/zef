@@ -27,7 +27,7 @@ router.route('/')
     var email = req.body.email;
 
     var builder = {};
-    builder.error = {};
+    builder.status = "failed";
     if( username && password && email){
 
       Account.findOne( { username: username }, function(err, result){
@@ -47,28 +47,33 @@ router.route('/')
 
               // Save this account to mongo
               account.save(function (err) {
-                if (err)
-                  console.log(err);
+                if (err){
+                  builder.message = err;
+                  console.log(builder);
+                }
                 else
                 {
-                  res.json(account); // Send confirmation of creation 
+
+                  builder.status = "success";
+                  builder.account = account;
+                  res.json(builder); // Send confirmation of creation 
                 }
               });
 
             }else{
-              builder.email = "exists";
+              builder.message = "Email taken";
               res.json(builder);
             }
           });
 
         }else{
-          builder.error.username = "exists";
+          builder.message = "Username taken";
           res.json(builder);
         }
       });
     }
     else{
-      builder.error.parameters = "missing";
+      builder.message = "Missing Fields";
       res.send(builder);
     }
 
@@ -80,21 +85,31 @@ router.route('/')
     var username = req.body.username;
     var password = req.body.password;
 
+    var builder = {};
+    builder.status = "failed";
+
     if( username && password ){
 
       var account = new Account({ username: username, password: req.body.password });
 
       // Find the account that the user wants
       Account.findOneAndUpdate( { username: username, password: password }, {$set: {apikey: shortid.generate(), accessed: new Date() }} , {new:true}, function(err, user){
-        if ( err || !user ) { 
-          res.send("Invalid creds");
+        if ( err || !user ) {
+          builder.message = "Authentication Failed"; 
+          res.send(builder);
         }else{
-          res.json(user);
+
+          // Send the status and token back
+          builder.status = "success";
+          builder.token = user.apikey;
+          res.json(builder);
+
         }
       });
     }
     else{
-      res.send("ERROR: Invalid GET request");
+      builder.message = "Invalid Request, Programming Error";
+      res.send(builder);
     }
   });
 

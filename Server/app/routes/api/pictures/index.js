@@ -16,25 +16,29 @@ var authController = require('../auth');
 router.route('/public')
   .get(function(req, res, next){  // GET LIST OF PICS
     var builder = {};
+    builder.status = "failed";
 
     Picture.find({is_shared: true}, 'name _id', function(err, result){
       if ( err || !result ) { 
-        builder.error = err;
-        res.json(builder.error);
+        builder.message = err;
+        res.json(builder);
       }else{
-        res.json(result);
+        builder.status = "success";
+        builder.response = result;
+        res.json(builder);
       }
     });
   });
 router.route('/public/:pic_id')
   .get(function(req, res, next){  // GET LIST OF PICS
     var builder = {};
-
+    builder.status = "failed";
     Picture.findOne({is_shared: true, _id: req.params.pic_id}, 'name _id', function(err, result){
       if ( err || !result ) { 
-        builder.error = err;
-        res.json(builder.error);
+        builder.message = err;
+        res.json(builder);
       }else{
+        builder.status = "success";
         builder.picture = result;
         builder.account = "";
         Account.findOne({_id:result.account_id}, 'username email', function(e,r){
@@ -49,23 +53,27 @@ router.route('/public/:pic_id')
 // PRIVATE
 
 router.route('/')
-//localhost:8080/api/pictures?apikey=test
+  //localhost:8080/api/pictures?apikey=test
   .get(authController.isAuthenticated, function(req, res, next){  // GET LIST OF PICS
     var builder = {};
+    builder.status = "failed";
     console.log(req.user); // THIS IS USER ID, DO COOL THINGS
 
     Picture.find({account_id: req.user._id}, '', function(err, result){
-      if ( err || !result ) { 
-        builder.error = err;
+      if ( err || !result ) {
+        builder.message = err;
 
-        res.json(builder.error);
+        res.json(builder);
       }else{
-        res.json(result);
+        builder.status = "success";
+        builder.response = result;
+        res.json(builder);
       }
     });
   })
   .put(authController.isAuthenticated, function(req, res, next){  // CREATE NEW PIC
     var  builder = {};
+    builder.status = "failed";
     var picJSON = JSON.parse(req.body.encoded_string);
     var id = req.user._id;  // USER ID, SHOULD MATCH TOKEN
     var shared = req.body.shared || false;
@@ -75,16 +83,20 @@ router.route('/')
       console.log(picture);
       picture.save(function (err) {
         if (err){
+          builder.message = err;
           console.log(err);
+          res.json(builder);
         }
-        else{    
-          res.json(picture); // Send confirmation of creation
+        else{
+          builder.status = "success";
+          builder.response = picture;
+          res.json(builder); // Send confirmation of creation
         }
       });
 
     }
     else {
-      builder.error = "Invalid request";
+      builder.message = "Invalid request";
       res.json(builder);
     }
   });
@@ -96,26 +108,27 @@ router.route('/:pic_id')
     // OUT: invalid token/pic_id, picJSON
     var pic_id = req.params.pic_id;
     var builder = {};
-
+    builder.status = "failed";
     console.log(pic_id);
     if( pic_id ){
       Picture.findOne({_id:pic_id}, function(err, result){
         if ( err || !result ) { 
-          builder.error = err;
-          res.json(builder.error);
+          builder.message = err;
+          res.json(builder);
         }else{
-          builder.picture = result;
-          builder.account = "";
+          builder.status = "success";
+          builder.response.picture = result;
+          builder.response.account = "";
           Account.findOne({_id:result.account_id}, 'username email', function(e,r){
-            builder.account = r;
-            res.json(builder);  
+            builder.response.account = r;
           });
+          res.json(builder);  
         }
       });
     }
     else
     {
-      builder.error = "Invalid request";
+      builder.message = "Invalid request";
       res.json(builder);
     }
   })
@@ -124,23 +137,23 @@ router.route('/:pic_id')
     // OUT: invalid token, invalid id, confirmation
     var pic_id = req.params.pic_id;
     var builder = {};
-
+    builder.status = "failed";
     if( pic_id ){
       Picture.remove( { _id: pic_id }, function(err, result){
         if (!err && result.result.n >0){
           console.log(result);
-          builder.error = 0;
+          builder.status = "success";
           res.json(builder); // How are we sending good responses?
         }
         else{
-          builder.error = "Could not find pic";
+          builder.message = "Could not find pic";
           res.send(builder);
         }
       });
     }
     else
     {
-      builder.error = "Invalid request";
+      builder.message = "Invalid request";
       res.json(builder);
     }
   });
