@@ -80,21 +80,31 @@ router.route('/')
     var username = req.body.username;
     var password = req.body.password;
 
+    var builder = {};
+    builder.status = "failed";
+
     if( username && password ){
 
       var account = new Account({ username: username, password: req.body.password });
 
       // Find the account that the user wants
       Account.findOneAndUpdate( { username: username, password: password }, {$set: {apikey: shortid.generate(), accessed: new Date() }} , {new:true}, function(err, user){
-        if ( err || !user ) { 
-          res.send("Invalid creds");
+        if ( err || !user ) {
+          builder.message = "Authentication Failed"; 
+          res.send(builder);
         }else{
-          res.json(user);
+
+          // Send the status and token back
+          builder.status = "success";
+          builder.token = user.apikey;
+          res.json(builder);
+
         }
       });
     }
     else{
-      res.send("ERROR: Invalid GET request");
+      builder.message = "Invalid Request, Programming Error";
+      res.send(builder);
     }
   });
 
