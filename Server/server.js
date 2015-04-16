@@ -12,6 +12,9 @@ var app = express();
 var api = require('./app/routes/api');
 var website = require('./app/routes/website');
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use( bodyParser.json() ); // to support JSON-encoded bodies
+
 process.argv.forEach(function(v){
   if(v === '--development') {
     global.PRODUCTION = false;

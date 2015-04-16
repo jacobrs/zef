@@ -12,9 +12,6 @@ var Account = require('../../../models/Account');
 
 var authController = require('../auth');
 
-router.use(bodyParser.urlencoded({ extended: true }));
-router.use( bodyParser.json() ); // to support JSON-encoded bodies
-
 // PUBLIC API FOR SITE!
 router.route('/public')
   .get(function(req, res, next){  // GET LIST OF PICS
@@ -67,15 +64,11 @@ router.route('/')
       }
     });
   })
-  .put(function(req, res, next){  // CREATE NEW PIC
+  .put(authController.isAuthenticated, function(req, res, next){  // CREATE NEW PIC
     var  builder = {};
-    var picJSON = req.body.picJSON;
-    var id = req.body.id;  // USER ID, SHOULD MATCH TOKEN
-    var shared = false;
-
-    if (req.body.is_shared){
-      shared = true;
-    }
+    var picJSON = JSON.parse(req.body.encoded_string);
+    var id = req.user._id;  // USER ID, SHOULD MATCH TOKEN
+    var shared = req.body.shared || false;
 
     if( picJSON ){
       var picture = new Picture({ account_id: id, name: picJSON.name, encoded_string: picJSON, is_shared: shared });
@@ -91,7 +84,8 @@ router.route('/')
 
     }
     else {
-      res.send("invalid request");
+      builder.error = "Invalid request";
+      res.json(builder);
     }
   });
 
@@ -103,7 +97,6 @@ router.route('/:pic_id')
     var pic_id = req.params.pic_id;
     var builder = {};
 
-     var pic="551f395df3c0026805737f23";
     console.log(pic_id);
     if( pic_id ){
       Picture.findOne({_id:pic_id}, function(err, result){
@@ -122,7 +115,8 @@ router.route('/:pic_id')
     }
     else
     {
-      res.send("ERROR: Invalid GET request");
+      builder.error = "Invalid request";
+      res.json(builder);
     }
   })
   .delete(authController.isAuthenticated, function(req, res, next){  //DELETE PICTURE
@@ -132,19 +126,22 @@ router.route('/:pic_id')
     var builder = {};
 
     if( pic_id ){
-      Picture.remove( { _id: pic_id }, function(err){
-        if (!err){
-          res.send("niceee"); // How are we sending good responses?
+      Picture.remove( { _id: pic_id }, function(err, result){
+        if (!err && result.result.n >0){
+          console.log(result);
+          builder.error = 0;
+          res.json(builder); // How are we sending good responses?
         }
         else{
-          builder.error = err;
-          res.send(builder.error);
+          builder.error = "Could not find pic";
+          res.send(builder);
         }
       });
     }
     else
     {
-      res.send("ERROR: Invalid GET request");
+      builder.error = "Invalid request";
+      res.json(builder);
     }
   });
 
