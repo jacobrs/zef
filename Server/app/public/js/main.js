@@ -1,4 +1,4 @@
-var app = angular.module('ZefApp', ['ngMaterial', 'ngAnimate', 'ngSanitize', 'ngRoute', 'appControllers']);
+var app = angular.module('ZefApp', ['ngStorage', 'ngMaterial', 'ngAnimate', 'ngSanitize', 'ngRoute', 'appControllers']);
 
 app.config(function ($mdThemingProvider) {
   $mdThemingProvider.definePalette('customPrimary', {  // teal
@@ -52,12 +52,35 @@ app.config(function ($mdThemingProvider) {
 
 });
 
-app.config(['$routeProvider', function($router) {
+app.config(['$routeProvider', '$httpProvider',  function($router, $httpProvider) {
   $router
   .when('/', {
     templateUrl: 'pictures.html'
   })
+  .when('/login', {
+    templateUrl: 'pictures.html',
+    controller: 'loginCtrl'
+  })
   .otherwise({
     redirectTo: '/'
   });
+
+  $httpProvider.interceptors.push(['$q', '$location', '$localStorage', function($q, $location, $localStorage) {
+      return {
+          'request': function (config) {
+              config.headers = config.headers || {};
+              if ($localStorage.token) {
+                  config.headers.Authorization = 'Bearer ' + $localStorage.token;
+              }
+              console.log($localStorage);
+              return config;
+          },
+          'responseError': function(response) {
+              if(response.status === 401 || response.status === 403) {
+                  $location.path('/login');
+              }
+              return $q.reject(response);
+          }
+      };
+  }]);
 }]);
