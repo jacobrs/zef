@@ -67,7 +67,7 @@ app.config(['$routeProvider', '$httpProvider',  function($router, $httpProvider)
               config.headers = config.headers || {};
               if ($localStorage.token) {
                   console.log('header');
-                  config.headers.Authorization = 'Bearer ' + $localStorage.token;
+                  config.headers.apikey = $localStorage.token;
               }
               return config;
           },

@@ -136,7 +136,7 @@ function($mdDialog, $rootScope, $scope, $location, $localStorage, Auth) {
 
 //AUTH
 appControllers.factory('Auth', ['$http', '$localStorage', function($http, $localStorage){
-  var baseUrl = "http://localhost:8080";
+  var baseUrl = "http://ec2-52-4-224-221.compute-1.amazonaws.com/";
   function changeUser(user) {
     angular.extend(currentUser, user);
   }
@@ -167,7 +167,7 @@ appControllers.factory('Auth', ['$http', '$localStorage', function($http, $local
     }
     return user;
   }
-  
+
   var currentUser = getUserFromToken();
 
   return {
