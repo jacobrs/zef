@@ -57,10 +57,6 @@ app.config(['$routeProvider', '$httpProvider',  function($router, $httpProvider)
   .when('/', {
     templateUrl: 'pictures.html'
   })
-  .when('/login', {
-    templateUrl: 'pictures.html',
-    controller: 'loginCtrl'
-  })
   .otherwise({
     redirectTo: '/'
   });
@@ -70,9 +66,9 @@ app.config(['$routeProvider', '$httpProvider',  function($router, $httpProvider)
           'request': function (config) {
               config.headers = config.headers || {};
               if ($localStorage.token) {
+                  console.log('header');
                   config.headers.Authorization = 'Bearer ' + $localStorage.token;
               }
-              console.log($localStorage);
               return config;
           },
           'responseError': function(response) {

@@ -7,8 +7,13 @@ appControllers.controller('AppCtrl', ['$scope', '$timeout', '$mdDialog', '$mdSid
     };
 
     $scope.public = function(){ // Get all public pics
-      $http.get('/api/pictures/public').success(function(result) {      
-        $scope.pictures = result;
+      $http.get('/api/pictures/public').success(function(result) { 
+        if (isAuthed(result)){
+          $scope.pictures = result.response;  
+        }
+        else{
+          openLogin();
+        }
       }).error(function(err) {
 
       });
@@ -16,8 +21,13 @@ appControllers.controller('AppCtrl', ['$scope', '$timeout', '$mdDialog', '$mdSid
     };
 
     $scope.private = function(){ // Get all private pics
-      $http.get('/api/pictures/').success(function(result) {      
-        $scope.pictures = result;
+      $http.get('/api/pictures/').success(function(result) {
+        if (isAuthed(result)){
+          $scope.pictures = result.response;  
+        }
+        else{
+          openLogin();
+        }
       }).error(function(err) {
 
       });
@@ -33,73 +43,70 @@ appControllers.controller('AppCtrl', ['$scope', '$timeout', '$mdDialog', '$mdSid
                 }
       })
       .then(function(answer) {
-        $scope.alert = 'You said the information was "' + answer + '".';
+        console.log(answer);
       }, function() {
-        $scope.alert = 'You cancelled the dialog.';
+        console.log('delcine');
       });
     };
 
     $scope.private(); // Load all private by devailt    
-     
+
+    function openLogin(){
+      console.log('open');
+      $mdDialog.show({
+        templateUrl: 'templates/login.tmpl.html'
+      })
+      .then(function(answer) {
+        console.log(answer);
+      }, function() {
+        console.log('delcine');
+      });
+    }
   }
 ]);
 
-function ViewPicCtrl($http, $scope, $mdDialog, pic_id) {
-  var url = '/api/pictures/' + pic_id;
-  console.log(url);
-  $http.get('/api/pictures/' + pic_id).success(function(result) {      
-    console.log(result);
-    $scope.picture = result.picture;
-    $scope.creator = result.account.username;
-
-    var canvas = document.getElementById('canvas');
-    var ctx=c.getContext("2d");
-    ctx.rect(20,20,150,100);
-    ctx.stroke();
-  }).error(function(err) {
-
-  });
-
-  $scope.hide = function() {
-    $mdDialog.hide();
-  };
-  $scope.cancel = function() {
-    $mdDialog.cancel();
-  };
-  $scope.answer = function(answer) {
-    $mdDialog.hide(answer);
-  };
-};
-
-appControllers.controller('loginCtrl', ['$rootScope', '$scope', '$location', '$localStorage', '$mdDialog', 'Auth', function($rootScope, $scope, $location, $localStorage, $mdDialog, Auth) {
+appControllers.controller('LoginCtrl', ['$rootScope', '$scope', '$location', '$localStorage', 'Auth', 
+function($rootScope, $scope, $location, $localStorage, Auth) {
  
-    $scope.signin = function() {
-      var formData = {
-        username: $scope.username,
-        password: $scope.password
-      }
+  $scope.user= {
+    username: '',
+    password: '',
+    email: '',
+    first: '',
+    last: ''
+  };
 
-      Main.signin(formData, function(res) {
-          if (res.type == false) {
-            alert(res.data)    
-        } else {
-          $localStorage.token = res.data.token;
-          window.location = "/";    
-        }
-      }, function() {
-          $rootScope.error = 'Failed to signin';
-      })
+  $scope.signin = function() {
+    var formData = {
+      username: $scope.user.username,
+      password: $scope.user.password
     };
+
+    Auth.signin(formData, function(res) {
+      if (res.type === false) {
+        alert(res.data)    
+      } else {
+        console.log(res.data);
+        console.log(res);
+        $localStorage.token = res.data.token;
+        window.location = "/";    
+      }
+    }, function() {
+      $rootScope.error = 'Failed to signin';
+    });
+  };
 
   $scope.signup = function() {
     var formData = {
-      email: $scope.email,
+      username: $scope.username,
+      first: $scope.first,
+      last: $scope.last,
       email: $scope.email,
       password: $scope.password
-    }
+    };
 
-    Main.save(formData, function(res) {
-      if (res.type == false) {
+    Auth.save(formData, function(res) {
+      if (res.type === false) {
         alert(res.data)
       } else {
         $localStorage.token = res.data.token;
@@ -111,7 +118,7 @@ appControllers.controller('loginCtrl', ['$rootScope', '$scope', '$location', '$l
   };
 
   $scope.me = function() {
-    Main.me(function(res) {
+    Auth.me(function(res) {
       $scope.myDetails = res;
     }, function() {
       $rootScope.error = 'Failed to fetch details';
@@ -119,7 +126,7 @@ appControllers.controller('loginCtrl', ['$rootScope', '$scope', '$location', '$l
   };
 
   $scope.logout = function() {
-    Main.logout(function() {
+    Auth.logout(function() {
       window.location = "/"
     }, function() {
       alert("Failed to logout!");
@@ -128,6 +135,8 @@ appControllers.controller('loginCtrl', ['$rootScope', '$scope', '$location', '$l
   $scope.token = $localStorage.token;
 }]);
 
+
+//AUTH
 appControllers.factory('Auth', ['$http', '$localStorage', function($http, $localStorage){
   var baseUrl = "ec2-52-4-224-221.compute-1.amazonaws.com";
   function changeUser(user) {
@@ -165,13 +174,14 @@ appControllers.factory('Auth', ['$http', '$localStorage', function($http, $local
 
   return {
     save: function(data, success, error) {
-      $http.post(baseUrl + '/login', data).success(success).error(error)
+      $http.put(baseUrl + '/api/accounts/', data).success(success).error(error);
     },
     signin: function(data, success, error) {
-      $http.post(baseUrl + '/api/login', data).success(success).error(error)
+      console.log(baseUrl+'/api/accounts/');
+      $http.post(baseUrl + '/api/accounts/login', data).success(success).error(error);
     },
     me: function(success, error) {
-      $http.get(baseUrl + '/me').success(success).error(error)
+      $http.get(baseUrl + '/me').success(success).error(error);
     },
     logout: function(success) {
       changeUser({});
@@ -179,4 +189,37 @@ appControllers.factory('Auth', ['$http', '$localStorage', function($http, $local
       success();
     }
   };
-}]);
+}
+]);
+
+function isAuthed(res){
+  var status = res.status || 'failed';
+  return status == 'success';
+}
+
+function ViewPicCtrl($http, $scope, $mdDialog, pic_id) {
+  var url = '/api/pictures/' + pic_id;
+  console.log(url);
+  $http.get('/api/pictures/' + pic_id).success(function(result) {      
+    console.log(result);
+    $scope.picture = result.picture;
+    $scope.creator = result.account.username;
+
+    var canvas = document.getElementById('canvas');
+    var ctx=c.getContext("2d");
+    ctx.rect(20,20,150,100);
+    ctx.stroke();
+  }).error(function(err) {
+
+  });
+
+  $scope.hide = function() {
+    $mdDialog.hide();
+  };
+  $scope.cancel = function() {
+    $mdDialog.cancel();
+  };
+  $scope.answer = function(answer) {
+    $mdDialog.hide(answer);
+  };
+}
