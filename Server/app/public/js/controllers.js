@@ -65,8 +65,8 @@ appControllers.controller('AppCtrl', ['$scope', '$timeout', '$mdDialog', '$mdSid
   }
 ]);
 
-appControllers.controller('LoginCtrl', ['$rootScope', '$scope', '$location', '$localStorage', 'Auth', 
-function($rootScope, $scope, $location, $localStorage, Auth) {
+appControllers.controller('LoginCtrl', ['$mdDialog', '$rootScope', '$scope', '$location', '$localStorage', 'Auth', 
+function($mdDialog, $rootScope, $scope, $location, $localStorage, Auth) {
  
   $scope.user= {
     username: '',
@@ -87,7 +87,7 @@ function($rootScope, $scope, $location, $localStorage, Auth) {
         alert(res.data)
       } else {
         $localStorage.token = res.token;
-        window.location = "/";    
+        $mdDialog.cancel('success');
       }
     }, function() {
       $rootScope.error = 'Failed to signin';
@@ -136,7 +136,7 @@ function($rootScope, $scope, $location, $localStorage, Auth) {
 
 //AUTH
 appControllers.factory('Auth', ['$http', '$localStorage', function($http, $localStorage){
-  var baseUrl = "ec2-52-4-224-221.compute-1.amazonaws.com";
+  var baseUrl = "http://localhost:8080";
   function changeUser(user) {
     angular.extend(currentUser, user);
   }
@@ -167,7 +167,7 @@ appControllers.factory('Auth', ['$http', '$localStorage', function($http, $local
     }
     return user;
   }
-
+  
   var currentUser = getUserFromToken();
 
   return {
