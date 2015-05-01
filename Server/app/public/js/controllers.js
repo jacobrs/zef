@@ -83,12 +83,10 @@ function($rootScope, $scope, $location, $localStorage, Auth) {
     };
 
     Auth.signin(formData, function(res) {
-      if (res.type === false) {
-        alert(res.data)    
+      if (res.status === 'failure') {
+        alert(res.data)
       } else {
-        console.log(res.data);
-        console.log(res);
-        $localStorage.token = res.data.token;
+        $localStorage.token = res.token;
         window.location = "/";    
       }
     }, function() {
@@ -127,7 +125,7 @@ function($rootScope, $scope, $location, $localStorage, Auth) {
 
   $scope.logout = function() {
     Auth.logout(function() {
-      window.location = "/"
+      window.location = "/";
     }, function() {
       alert("Failed to logout!");
     });
@@ -178,7 +176,7 @@ appControllers.factory('Auth', ['$http', '$localStorage', function($http, $local
     },
     signin: function(data, success, error) {
       console.log(baseUrl+'/api/accounts/');
-      $http.post(baseUrl + '/api/accounts/login', data).success(success).error(error);
+      $http.post(baseUrl + '/api/accounts/', data).success(success).error(error);
     },
     me: function(success, error) {
       $http.get(baseUrl + '/me').success(success).error(error);

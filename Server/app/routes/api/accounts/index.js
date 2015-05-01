@@ -81,7 +81,7 @@ router.route('/')
   .post(function(req, res, next) {  //LOGIN ACCOUNT
     // IN:  username, password
     // OUT: token, ERRORS
-
+    console.log('POST');
     var username = req.body.username;
     var password = req.body.password;
 
