@@ -52,7 +52,6 @@ appControllers.controller('AppCtrl', ['$scope', '$timeout', '$mdDialog', '$mdSid
     $scope.private(); // Load all private by devailt    
 
     function openLogin(){
-      console.log('open');
       $mdDialog.show({
         templateUrl: 'templates/login.tmpl.html'
       })
@@ -65,8 +64,8 @@ appControllers.controller('AppCtrl', ['$scope', '$timeout', '$mdDialog', '$mdSid
   }
 ]);
 
-appControllers.controller('LoginCtrl', ['$mdDialog', '$rootScope', '$scope', '$location', '$localStorage', 'Auth', 
-function($mdDialog, $rootScope, $scope, $location, $localStorage, Auth) {
+appControllers.controller('LoginCtrl', ['$mdToast', '$mdDialog', '$rootScope', '$scope', '$location', '$localStorage', 'Auth', 
+function($mdToast, $mdDialog, $rootScope, $scope, $location, $localStorage, Auth) {
  
   $scope.user= {
     username: '',
@@ -87,6 +86,9 @@ function($mdDialog, $rootScope, $scope, $location, $localStorage, Auth) {
         alert(res.data)
       } else {
         $localStorage.token = res.token;
+        $mdToast.show(
+          $mdToast.simple().content("Signed in!")
+          );
         $mdDialog.cancel('success');
       }
     }, function() {

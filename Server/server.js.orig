@@ -12,9 +12,6 @@ var app = express();
 var api = require('./app/routes/api');
 var website = require('./app/routes/website');
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use( bodyParser.json() ); // to support JSON-encoded bodies
-
 process.argv.forEach(function(v){
   if(v === '--development') {
     global.PRODUCTION = false;
@@ -34,7 +31,11 @@ app.use(function(req, res, next) {
 
 // Use passport
 app.use(passport.initialize());
+<<<<<<< HEAD
+app.use(passport.session());
+=======
 // app.use(passport.session());
+>>>>>>> devss
 
 // app.use(flash());
 
@@ -43,7 +44,7 @@ app.set('json replacer', "  ");
 
 app.all('*', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
   next();
 });
 
