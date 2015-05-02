@@ -13,17 +13,15 @@ import java.util.LinkedList;
 
 import ca.qc.johnabbott.cs603.R;
 
-public class SendLogin extends AsyncTask<Void, Integer, Void> {
+public class SendVerify extends AsyncTask<Void, Integer, Void> {
 
-    private WeakReference<User> logger;
     private Boolean connected;
     private BoolRefreshable caller;
 
     private String LOGIN_URL = JSONParser.BASE_URL + "api/accounts/";
 
-    public SendLogin(BoolRefreshable caller, User logger) {
+    public SendVerify(BoolRefreshable caller) {
         this.caller = caller;
-        this.logger = new WeakReference<>(logger);
     }
 
     @Override
@@ -32,10 +30,8 @@ public class SendLogin extends AsyncTask<Void, Integer, Void> {
         LinkedList<String> names = new LinkedList<>();
         LinkedList<String> vals = new LinkedList<>();
 
-        names.add("username");
-        vals.add(logger.get().username);
-        names.add("password");
-        vals.add(logger.get().email);
+        names.add("apikey");
+        vals.add(Session.prefs.getString("zef_token", ""));
 
         JSONParser parser = new JSONParser();
         JSONObject json = parser.getJSONFromUrl(LOGIN_URL, names, vals);
@@ -50,7 +46,6 @@ public class SendLogin extends AsyncTask<Void, Integer, Void> {
             String status = json.getString("status");
             if(status.equals("success")){
                 connected = true;
-                logger.get().token = json.getString("token");
             }
         }catch(Exception e){
             e.printStackTrace();

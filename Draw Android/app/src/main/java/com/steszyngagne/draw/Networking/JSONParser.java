@@ -7,6 +7,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -26,7 +27,7 @@ import java.util.ListIterator;
 
 public class JSONParser{
 
-    public static String BASE_URL = "http://localhost:8080/";
+    public static String BASE_URL = "http://ec2-52-4-224-221.compute-1.amazonaws.com/";
 
     static InputStream is = null;
     static JSONObject jObj = null;
@@ -60,10 +61,13 @@ public class JSONParser{
             // httpClient.getConnectionManager().shutdown();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+            return null;
         } catch (ClientProtocolException e) {
             e.printStackTrace();
+            return null;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -78,12 +82,14 @@ public class JSONParser{
             //Log.i("JSON Return", json);
         } catch (Exception e) {
             Log.e("Buffer Error", "Error converting result " + e.toString());
+            return null;
         }
         // try parse the string to a JSON object
         try {
             jObj = new JSONObject(json);
         } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data " + e.toString());
+            return null;
         }
         // return JSON String
         return jObj;
@@ -93,5 +99,51 @@ public class JSONParser{
         LinkedList<String> namePlaceholder = new LinkedList<String>();
         LinkedList<String> valsPlaceholder = new LinkedList<String>();
         return getJSONFromUrl(url, namePlaceholder, valsPlaceholder);
+    }
+
+    public JSONObject getJSONFromUrlGET(String url) {
+        // Making HTTP request
+
+        try {
+            DefaultHttpClient client = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(url);
+            HttpResponse execute = client.execute(httpGet);
+            is = execute.getEntity().getContent();
+            json = null;
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    is, "iso-8859-1"), 8);
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "n");
+            }
+            is.close();
+            json = sb.toString();
+            //Log.i("JSON Return", json);
+        } catch (Exception e) {
+            Log.e("Buffer Error", "Error converting result " + e.toString());
+            return null;
+        }
+        // try parse the string to a JSON object
+        try {
+            jObj = new JSONObject(json);
+        } catch (JSONException e) {
+            Log.e("JSON Parser", "Error parsing data " + e.toString());
+            return null;
+        }
+        // return JSON String
+        return jObj;
     }
 }

@@ -41,4 +41,17 @@
     <string name="signup">Sign Up</string>
     <string name="back_signin">Go back to Sign In</string>
 
+    <string name="welcome">Good day </string>
+    <string name="auth_failed">Invalid login zef</string>
+    <string name="conn_error">Cannot connect to zef servers</string>
+
+    <string name="login_progress_title">Patience</string>
+    <string name="login_progress_text">We are logging you in, patience is a virtue</string>
+    <string name="title_activity_picture_list">PictureList</string>
+
+    <!-- PlaceHolders -->
+
+    <string name="name">Name</string>
+    <string name="num_shapes">shapes</string>
+
 </resources>

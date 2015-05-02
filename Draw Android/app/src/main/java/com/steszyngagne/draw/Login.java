@@ -11,9 +11,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.steszyngagne.draw.Interfaces.BoolRefreshable;
+import com.steszyngagne.draw.Networking.Session;
+import com.steszyngagne.draw.Structs.User;
+
 import ca.qc.johnabbott.cs603.R;
 
-public class Login extends Activity {
+public class Login extends Activity implements BoolRefreshable{
+
+    public static final int LOGIN = 1;
+    public static final int REGISTER = 2;
+    public static final int VERIFY = 3;
 
     View root;
 
@@ -43,6 +51,11 @@ public class Login extends Activity {
             }
         });
 
+        Session.currentActivity = this;
+
+        /*if(!Session.prefs.getString("zef_token", "").equals("")){
+
+        }*/
     }
 
     private void login(){
@@ -55,8 +68,7 @@ public class Login extends Activity {
             return;
         }
 
-        Intent home = new Intent(Login.this, MainActivity.class);
-        startActivity(home);
+        Session.Login(new User(username, password), this);
     }
 
     private void register(){
@@ -132,5 +144,18 @@ public class Login extends Activity {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void afterRefresh(boolean res, int code) {
+        if(code == Login.LOGIN){
+            if(res){
+                Intent home = new Intent(Login.this, PictureList.class);
+                startActivity(home);
+                Session.ShowLongError(getString(R.string.welcome) + " " + Session.current.username);
+            }else{
+                Session.ShowShortError(getString(R.string.auth_failed));
+            }
+        }
     }
 }
