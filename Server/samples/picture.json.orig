@@ -1,0 +1,32 @@
+<<<<<<< HEAD
+{"account_id":"552fbb2ebeab600c55274f07","name":"TestImage","encoded_string":{"name":"TestImage","shapes":[{"shape":"Rectangle","x1":171,"x2":474,"y1":404,"y2":687,"fillColor":0,"strokeColor":2},{"shape":"Rectangle","x1":411,"x2":753,"y1":954,"y2":1234,"fillColor":0,"strokeColor":2}]},"is_shared":true}
+=======
+{
+  "account_id": "552fbb2ebeab600c55274f07",
+  "name": "TestImage",
+  "encoded_string": {
+    "name": "TestImage",
+    "shapes": [
+      {
+        "shape": "Rectangle",
+        "x1": 171,
+        "x2": 474,
+        "y1": 404,
+        "y2": 687,
+        "fillColor": 0,
+        "strokeColor": 2
+      },
+      {
+        "shape": "Rectangle",
+        "x1": 411,
+        "x2": 753,
+        "y1": 954,
+        "y2": 1234,
+        "fillColor": 0,
+        "strokeColor": 2
+      }
+    ]
+  },
+  "is_shared": true
+}
+>>>>>>> devss

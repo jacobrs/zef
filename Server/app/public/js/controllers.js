@@ -7,8 +7,13 @@ appControllers.controller('AppCtrl', ['$scope', '$timeout', '$mdDialog', '$mdSid
     };
 
     $scope.public = function(){ // Get all public pics
-      $http.get('/api/pictures/public').success(function(result) {      
-        $scope.pictures = result;
+      $http.get('/api/pictures/public').success(function(result) { 
+        if (isAuthed(result)){
+          $scope.pictures = result.response;  
+        }
+        else{
+          openLogin();
+        }
       }).error(function(err) {
 
       });
@@ -16,8 +21,13 @@ appControllers.controller('AppCtrl', ['$scope', '$timeout', '$mdDialog', '$mdSid
     };
 
     $scope.private = function(){ // Get all private pics
-      $http.get('/api/pictures/').success(function(result) {      
-        $scope.pictures = result;
+      $http.get('/api/pictures/').success(function(result) {
+        if (isAuthed(result)){
+          $scope.pictures = result.response;  
+        }
+        else{
+          openLogin();
+        }
       }).error(function(err) {
 
       });
@@ -33,16 +43,157 @@ appControllers.controller('AppCtrl', ['$scope', '$timeout', '$mdDialog', '$mdSid
                 }
       })
       .then(function(answer) {
-        $scope.alert = 'You said the information was "' + answer + '".';
+        console.log(answer);
       }, function() {
-        $scope.alert = 'You cancelled the dialog.';
+        console.log('delcine');
       });
-  };
+    };
 
     $scope.private(); // Load all private by devailt    
-     
+
+    function openLogin(){
+      console.log('open');
+      $mdDialog.show({
+        templateUrl: 'templates/login.tmpl.html'
+      })
+      .then(function(answer) {
+        console.log(answer);
+      }, function() {
+        console.log('delcine');
+      });
+    }
   }
 ]);
+
+appControllers.controller('LoginCtrl', ['$mdDialog', '$rootScope', '$scope', '$location', '$localStorage', 'Auth', 
+function($mdDialog, $rootScope, $scope, $location, $localStorage, Auth) {
+ 
+  $scope.user= {
+    username: '',
+    password: '',
+    email: '',
+    first: '',
+    last: ''
+  };
+
+  $scope.signin = function() {
+    var formData = {
+      username: $scope.user.username,
+      password: $scope.user.password
+    };
+
+    Auth.signin(formData, function(res) {
+      if (res.status === 'failure') {
+        alert(res.data)
+      } else {
+        $localStorage.token = res.token;
+        $mdDialog.cancel('success');
+      }
+    }, function() {
+      $rootScope.error = 'Failed to signin';
+    });
+  };
+
+  $scope.signup = function() {
+    var formData = {
+      username: $scope.username,
+      first: $scope.first,
+      last: $scope.last,
+      email: $scope.email,
+      password: $scope.password
+    };
+
+    Auth.save(formData, function(res) {
+      if (res.type === false) {
+        alert(res.data)
+      } else {
+        $localStorage.token = res.data.token;
+        window.location = "/"   
+      }
+    }, function() {
+      $rootScope.error = 'Failed to signup';
+    })
+  };
+
+  $scope.me = function() {
+    Auth.me(function(res) {
+      $scope.myDetails = res;
+    }, function() {
+      $rootScope.error = 'Failed to fetch details';
+    })
+  };
+
+  $scope.logout = function() {
+    Auth.logout(function() {
+      window.location = "/";
+    }, function() {
+      alert("Failed to logout!");
+    });
+  };
+  $scope.token = $localStorage.token;
+}]);
+
+
+//AUTH
+appControllers.factory('Auth', ['$http', '$localStorage', function($http, $localStorage){
+  var baseUrl = "http://ec2-52-4-224-221.compute-1.amazonaws.com/";
+  function changeUser(user) {
+    angular.extend(currentUser, user);
+  }
+
+  function urlBase64Decode(str) {
+    var output = str.replace('-', '+').replace('_', '/');
+    switch (output.length % 4) {
+      case 0:
+        break;
+      case 2:
+        output += '==';
+        break;
+      case 3:
+        output += '=';
+        break;
+      default:
+        throw 'Illegal base64url string!';
+    }
+    return window.atob(output);
+  }
+
+  function getUserFromToken() {
+    var token = $localStorage.token;
+    var user = {};
+    if (typeof token !== 'undefined') {
+      var encoded = token.split('.')[1];
+      user = JSON.parse(urlBase64Decode(encoded));
+    }
+    return user;
+  }
+
+  var currentUser = getUserFromToken();
+
+  return {
+    save: function(data, success, error) {
+      $http.put(baseUrl + '/api/accounts/', data).success(success).error(error);
+    },
+    signin: function(data, success, error) {
+      console.log(baseUrl+'/api/accounts/');
+      $http.post(baseUrl + '/api/accounts/', data).success(success).error(error);
+    },
+    me: function(success, error) {
+      $http.get(baseUrl + '/me').success(success).error(error);
+    },
+    logout: function(success) {
+      changeUser({});
+      delete $localStorage.token;
+      success();
+    }
+  };
+}
+]);
+
+function isAuthed(res){
+  var status = res.status || 'failed';
+  return status == 'success';
+}
 
 function ViewPicCtrl($http, $scope, $mdDialog, pic_id) {
   var url = '/api/pictures/' + pic_id;
