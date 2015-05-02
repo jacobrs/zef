@@ -86,13 +86,16 @@ function($mdToast, $mdDialog, $rootScope, $scope, $location, $localStorage, Auth
         alert(res.data)
       } else {
         $localStorage.token = res.token;
+        console.log(res);
         $mdToast.show(
           $mdToast.simple().content("Signed in!")
-          );
+        );
         $mdDialog.cancel('success');
       }
     }, function() {
-      $rootScope.error = 'Failed to signin';
+      $mdToast.show(
+        $mdToast.simple().content("Failed to sign in!")
+      );
     });
   };
 
@@ -138,46 +141,14 @@ function($mdToast, $mdDialog, $rootScope, $scope, $location, $localStorage, Auth
 
 //AUTH
 appControllers.factory('Auth', ['$http', '$localStorage', function($http, $localStorage){
-  var baseUrl = "http://ec2-52-4-224-221.compute-1.amazonaws.com/";
-  function changeUser(user) {
-    angular.extend(currentUser, user);
-  }
-
-  function urlBase64Decode(str) {
-    var output = str.replace('-', '+').replace('_', '/');
-    switch (output.length % 4) {
-      case 0:
-        break;
-      case 2:
-        output += '==';
-        break;
-      case 3:
-        output += '=';
-        break;
-      default:
-        throw 'Illegal base64url string!';
-    }
-    return window.atob(output);
-  }
-
-  function getUserFromToken() {
-    var token = $localStorage.token;
-    var user = {};
-    if (typeof token !== 'undefined') {
-      var encoded = token.split('.')[1];
-      user = JSON.parse(urlBase64Decode(encoded));
-    }
-    return user;
-  }
-
-  var currentUser = getUserFromToken();
+  var baseUrl = "http://localhost:8080";
+  // var baseUrl = "http://ec2-52-4-224-221.compute-1.amazonaws.com";
 
   return {
     save: function(data, success, error) {
       $http.put(baseUrl + '/api/accounts/', data).success(success).error(error);
     },
     signin: function(data, success, error) {
-      console.log(baseUrl+'/api/accounts/');
       $http.post(baseUrl + '/api/accounts/', data).success(success).error(error);
     },
     me: function(success, error) {

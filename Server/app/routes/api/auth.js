@@ -1,16 +1,10 @@
 // Load required packages
 var passport = require('passport');
 var passport = require('passport');
-var LocalStrategy = require('passport-localapikey').Strategy;
+var BearerStrategy = require('passport-http-bearer').Strategy;
 
 var Account = require('../../models/Account');
-var API_LIMIT = 1000 * 10 * 60; // ten minutes
-
-function findByApiKey(apikey, fn) {
-  Account.findOne({apikey: apikey}, function(err,result){
-    return fn(null, result);
-  });
-}
+var API_LIMIT = 1000 * 10 * 60; // ten minutes 
 
 //For sessions, if we use them
 passport.serializeUser(function(user, done) {
@@ -22,28 +16,24 @@ passport.deserializeUser(function(id, done) {
     done(err, user);
   });
 });
-passport.use(new LocalStrategy(
+
+passport.use(new BearerStrategy(
   function(apikey, done) {
-    console.log(apikey);
-    // asynchronous verification, for effect...
-    process.nextTick(function () {
+    Account.findOne({ apikey: apikey }, function (err, user) {
+      if (err) { return done(err); }
+      if (!user) { return done(null, false); }
 
-      findByApiKey(apikey, function(err, user) {
-        if (err) { return done(err); }
-        if (!user) { return done(null, false, { message: 'Unknown apikey : ' + apikey }); }
+      //User was found, do stuff, like update last use time.
+      console.log(new Date() - user.accessed);
+      console.log(API_LIMIT);
+      if ((new Date() - user.accessed) > API_LIMIT){
+        console.log("gg");
+        return done(null, false, { message: 'apikey timed out, log in again' });
+      }
 
-        //User was found, do stuff, like update last use time.
-        console.log(new Date() - user.accessed);
-        console.log(API_LIMIT);
-        if ((new Date() - user.accessed) > API_LIMIT){
-          console.log("gg");
-          return done(null, false, { message: 'apikey timed out, log in again' });
-        }
-        return done(null, user);
-      })
+      return done(null, user);
     });
   }
 ));
 
-
-exports.isAuthenticated = passport.authenticate('localapikey', {failureRedirect: '/api/unauthorized'});
+exports.isAuthenticated = passport.authenticate('bearer', {failureRedirect: '/api/unauthorized'});
