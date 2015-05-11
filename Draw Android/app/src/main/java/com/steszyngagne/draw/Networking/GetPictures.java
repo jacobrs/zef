@@ -32,10 +32,10 @@ public class GetPictures extends AsyncTask<Void, Integer, Void> {
     protected Void doInBackground(Void... voids) {
         // Post names and values
         String url = JSONParser.BASE_URL + "api/pictures";
-        url += "?apikey=" + Session.current.token;
+        String key = Session.current.token;
 
         JSONParser parser = new JSONParser();
-        JSONObject json = parser.getJSONFromUrlGET(url);
+        JSONObject json = parser.getJSONFromUrlGET(url, key);
 
         if(json == null){
             return null;

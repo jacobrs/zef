@@ -34,7 +34,7 @@ public class JSONParser{
     static String json = "";
 
     public JSONObject getJSONFromUrl(String url, LinkedList<String> postNames,
-                                     LinkedList<String> postVals) {
+                                     LinkedList<String> postVals, String key) {
         // Making HTTP request
 
         try {
@@ -42,6 +42,7 @@ public class JSONParser{
             DefaultHttpClient httpClient = new DefaultHttpClient();
             List<Cookie> cookies = httpClient.getCookieStore().getCookies();
             HttpPost httpPost = new HttpPost(url);
+            httpPost.addHeader("Authorization", "Bearer" + key);
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
                     postNames.size());
             ListIterator<String> listIterator = postNames.listIterator();
@@ -98,15 +99,17 @@ public class JSONParser{
     public JSONObject getJSONFromUrl(String url){
         LinkedList<String> namePlaceholder = new LinkedList<String>();
         LinkedList<String> valsPlaceholder = new LinkedList<String>();
-        return getJSONFromUrl(url, namePlaceholder, valsPlaceholder);
+        String keyPlaceholder = "";
+        return getJSONFromUrl(url, namePlaceholder, valsPlaceholder, keyPlaceholder);
     }
 
-    public JSONObject getJSONFromUrlGET(String url) {
+    public JSONObject getJSONFromUrlGET(String url, String key) {
         // Making HTTP request
 
         try {
             DefaultHttpClient client = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(url);
+            httpGet.addHeader("Authorization", "Bearer" +key);
             HttpResponse execute = client.execute(httpGet);
             is = execute.getEntity().getContent();
             json = null;

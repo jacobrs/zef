@@ -29,12 +29,10 @@ public class SendVerify extends AsyncTask<Void, Integer, Void> {
         // Post names and values
         LinkedList<String> names = new LinkedList<>();
         LinkedList<String> vals = new LinkedList<>();
-
-        names.add("apikey");
-        vals.add(Session.prefs.getString("zef_token", ""));
+        String key = Session.prefs.getString("zef_token", "");
 
         JSONParser parser = new JSONParser();
-        JSONObject json = parser.getJSONFromUrl(LOGIN_URL, names, vals);
+        JSONObject json = parser.getJSONFromUrl(LOGIN_URL, names, vals, key);
 
         if(json == null){
             return null;

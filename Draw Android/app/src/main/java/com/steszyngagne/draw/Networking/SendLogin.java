@@ -38,7 +38,7 @@ public class SendLogin extends AsyncTask<Void, Integer, Void> {
         vals.add(logger.get().email);
 
         JSONParser parser = new JSONParser();
-        JSONObject json = parser.getJSONFromUrl(LOGIN_URL, names, vals);
+        JSONObject json = parser.getJSONFromUrl(LOGIN_URL, names, vals, ""); // No need for a key here
 
         if(json == null){
             return null;
