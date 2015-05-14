@@ -1,3 +1,4 @@
+//
 var appControllers = angular.module('appControllers', []);
 
 appControllers.controller('AppCtrl', ['$scope', '$timeout', '$mdDialog', '$mdSidenav', '$http', '$location', '$mdToast', '$animate',
