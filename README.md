@@ -1,5 +1,6 @@
-# zef
-Gagnsta numba 1
+# ZEF
+Android app to let you draw and save you pictures to the cloud.
+Upcoming functionality includes sharing drawings.
 
 #Setup
 ```
